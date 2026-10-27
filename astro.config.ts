@@ -11,7 +11,8 @@ import { unified } from "@astrojs/markdown-remark";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import rehypeCallouts from "rehype-callouts";
-import rehypeExternalLinks from "./src/plugins/rehypeExternalLinks";
+import rehypeExternalLinks from "rehype-external-links";
+import { OPENS_IN_NEW_TAB } from "./src/utils/externalHref";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
@@ -32,7 +33,15 @@ export default defineConfig({
       ],
       rehypePlugins: [
         rehypeCallouts,
-        [rehypeExternalLinks, { site: config.site.url }],
+        [
+          rehypeExternalLinks,
+          {
+            target: "_blank",
+            rel: ["noopener", "noreferrer"],
+            content: { type: "text", value: OPENS_IN_NEW_TAB },
+            contentProperties: { className: ["sr-only"] },
+          },
+        ],
       ],
     }),
     shikiConfig: {
