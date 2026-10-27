@@ -5,8 +5,6 @@ import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
-import { copy } from "@/copy";
 import config from "@/config";
 
 const about = await getEntry("pages", "about");
@@ -32,15 +30,6 @@ const { Content } = await render(about);
 
   <Main pageTitle={about.data.title} class="app-prose">
     <Content />
-    <section class="not-prose mt-10" aria-labelledby="about-contact">
-      <h2
-        id="about-contact"
-        class="text-foreground mb-3 text-2xl font-semibold wrap-break-word"
-      >
-        {copy.contact}
-      </h2>
-      <Socials />
-    </section>
   </Main>
 
   <Footer />

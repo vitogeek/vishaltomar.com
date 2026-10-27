@@ -1,9 +1,9 @@
 export const copy = {
-  contact: "Contact",
   nav: {
     home: "Home",
     caseStudies: "Case studies",
     about: "About",
+    contact: "Contact",
     primary: "Primary",
   },
   home: {
@@ -23,6 +23,10 @@ export const copy = {
     caseStudiesDesc:
       "Problems, decisions and trade-offs from building SaaS in regulated environments.",
     caseStudiesEmpty: "No published case studies yet.",
+    contactTitle: "Contact",
+    contactDesc: "Contact Vishal Tomar on LinkedIn or by email.",
+    contactBody:
+      "You can find my professional updates on LinkedIn. Message me there, or send me an email.",
   },
   a11y: {
     skipToContent: "Skip to content",

@@ -2,30 +2,61 @@
 import config from "@/config";
 import LinkButton from "./LinkButton.astro";
 
+type Props = {
+  labelled?: boolean;
+  names?: string[];
+};
+
+const { labelled = false, names } = Astro.props;
 const { site, socials } = config;
 
 const icons = import.meta.glob<{
   default: (_props: Record<string, unknown>) => unknown;
 }>("/src/assets/icons/socials/*.svg");
 
+const selected = names
+  ? names.flatMap(name => socials.filter(social => social.name === name))
+  : socials;
+
 const items = await Promise.all(
-  socials.map(async ({ name, url, linkTitle }) => {
+  selected.map(async ({ name, url, linkTitle, label }) => {
     const mod = await icons[`/src/assets/icons/socials/${name}.svg`]?.();
     const Icon = mod?.default;
+    if (!Icon) return null;
+
     const title =
       linkTitle ??
       (url.startsWith("mailto:") || name === "mail"
         ? `Send an email to ${site.title}`
         : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
-    return { url, title, Icon };
+
+    return { url, title, label, Icon };
   })
 );
+
+const links = items.filter(item => item !== null);
 ---
 
-<div class="flex flex-wrap items-center gap-2">
-  {
-    items.map(({ url, title, Icon }) =>
-      Icon ? (
+{
+  labelled ? (
+    <ul class="-mx-2 flex flex-col items-start gap-2">
+      {links.map(({ url, label, Icon }) => (
+        <li>
+          <LinkButton href={url} class="min-h-12 px-2 text-base">
+            <Icon
+              aria-hidden="true"
+              class="me-2 size-6 shrink-0 fill-transparent stroke-current stroke-2"
+            />
+            <span class="underline decoration-dashed underline-offset-4">
+              {label}
+            </span>
+          </LinkButton>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <div class="flex flex-wrap items-center gap-2">
+      {links.map(({ url, title, Icon }) => (
         <LinkButton
           href={url}
           class="size-12 justify-center"
@@ -37,7 +68,7 @@ const items = await Promise.all(
             class="size-6 fill-transparent stroke-current stroke-2"
           />
         </LinkButton>
-      ) : null
-    )
-  }
-</div>
+      ))}
+    </div>
+  )
+}

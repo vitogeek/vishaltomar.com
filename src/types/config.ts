@@ -50,13 +50,15 @@ interface SocialLink {
    * Override when the default wording doesn't fit.
    */
   linkTitle?: string;
+  /** Visible text shown with the icon. Icon-only links use linkTitle. */
+  label?: string;
 }
 
 interface AstroPaperConfig {
   site: SiteConfig;
   caseStudies?: CaseStudiesConfig;
   features?: FeaturesConfig;
-  /** Social profile links shown in header/footer */
+  /** Social profile links. The footer and contact page share these URLs. */
   socials?: SocialLink[];
 }
 
