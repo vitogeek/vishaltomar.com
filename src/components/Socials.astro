@@ -5,9 +5,10 @@ import LinkButton from "./LinkButton.astro";
 type Props = {
   labelled?: boolean;
   names?: string[];
+  class?: string;
 };
 
-const { labelled = false, names } = Astro.props;
+const { labelled = false, names, class: className } = Astro.props;
 const { site, socials } = config;
 
 const icons = import.meta.glob<{
@@ -39,10 +40,10 @@ const links = items.filter(item => item !== null);
 
 {
   labelled ? (
-    <ul class="-mx-2 flex flex-col items-start gap-2">
+    <ul class:list={["-mx-2 flex flex-col", className]}>
       {links.map(({ url, label, Icon }) => (
-        <li>
-          <LinkButton href={url} class="min-h-12 px-2 text-base">
+        <li class="flex min-h-0 flex-1">
+          <LinkButton href={url} class="h-full px-2 text-base">
             <Icon
               aria-hidden="true"
               class="me-2 size-6 shrink-0 fill-transparent stroke-current stroke-2"

@@ -7,6 +7,7 @@ import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
 import config from "@/config";
 
 const about = await getEntry("pages", "about");
@@ -31,20 +32,29 @@ const { Content } = await render(about);
   <Breadcrumb />
 
   <Main pageTitle={about.data.title} visuallyHiddenTitle>
-    <Picture
-      src={portrait}
-      alt="Vishal Tomar"
-      formats={["avif", "webp"]}
-      fallbackFormat="webp"
-      widths={[192, 256]}
-      sizes="(min-width: 40rem) 128px, 96px"
-      width={256}
-      height={256}
-      loading="eager"
-      decoding="sync"
-      fetchpriority="high"
-      class="mb-6 block size-24 rounded-full object-cover sm:size-32"
-    />
+    <div
+      class="mb-6 flex items-center gap-4 [--row:6rem] sm:gap-6 sm:[--row:8rem]"
+    >
+      <Picture
+        src={portrait}
+        alt="Vishal Tomar"
+        formats={["avif", "webp"]}
+        fallbackFormat="webp"
+        widths={[192, 256]}
+        sizes="(min-width: 40rem) 128px, 96px"
+        width={256}
+        height={256}
+        loading="eager"
+        decoding="sync"
+        fetchpriority="high"
+        class="block aspect-square size-(--row) shrink-0 rounded-full object-cover"
+      />
+      <Socials
+        labelled
+        names={["linkedin", "mail", "github"]}
+        class="h-(--row)"
+      />
+    </div>
     <div class="app-prose [&>:first-child]:mt-0">
       <Content />
     </div>
