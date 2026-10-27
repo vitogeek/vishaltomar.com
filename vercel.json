@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "vishaltomarcom.vercel.app" }],
+      "destination": "https://vishaltomar.com/:path*",
+      "permanent": true
+    }
+  ]
+}
