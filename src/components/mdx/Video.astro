@@ -8,6 +8,9 @@ interface Props {
 }
 
 const { src, caption, width, height, poster } = Astro.props;
+const captionId = `case-video-caption-${src
+  .replace(/[^a-zA-Z0-9]+/g, "-")
+  .replace(/^-|-$/g, "")}`;
 ---
 
 <figure class="not-prose my-8">
@@ -22,10 +25,11 @@ const { src, caption, width, height, poster } = Astro.props;
     preload="metadata"
     controls
     poster={poster}
+    aria-labelledby={captionId}
   >
     <source {src} type="video/mp4" />
   </video>
-  <figcaption class="text-foreground mt-2 text-sm leading-snug">
+  <figcaption id={captionId} class="text-foreground mt-2 text-sm leading-snug">
     {caption}
   </figcaption>
 </figure>
