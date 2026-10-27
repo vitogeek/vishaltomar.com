@@ -8,8 +8,8 @@ export const copy = {
   },
   home: {
     positioning:
-      "Technical product leader for B2B SaaS in PCI and SOC compliance.",
-    lede: "I turn high-friction problems in regulated products into shipped software, and I align executives, enterprise clients and audit directors on what to build first.",
+      "Technical product leader.",
+    lede: "I turn high-friction problems in regulated products into shipped software, and I align executives, clients and other stakeholders on what to build first.",
     support:
       "Nine years across backend, full-stack, team lead and product roles means I weigh engineering trade-offs as carefully as customer value.",
     featured: "Featured case studies",
