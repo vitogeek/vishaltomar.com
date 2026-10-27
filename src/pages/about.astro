@@ -1,5 +1,7 @@
 ---
+import { Picture } from "astro:assets";
 import { getEntry, render } from "astro:content";
+import portrait from "@/assets/vishal-tomar.jpg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
@@ -28,8 +30,24 @@ const { Content } = await render(about);
 
   <Breadcrumb />
 
-  <Main pageTitle={about.data.title} class="app-prose">
-    <Content />
+  <Main pageTitle={about.data.title} visuallyHiddenTitle>
+    <Picture
+      src={portrait}
+      alt="Vishal Tomar"
+      formats={["avif", "webp"]}
+      fallbackFormat="webp"
+      widths={[192, 256]}
+      sizes="(min-width: 40rem) 128px, 96px"
+      width={256}
+      height={256}
+      loading="eager"
+      decoding="sync"
+      fetchpriority="high"
+      class="mb-6 block size-24 rounded-full object-cover sm:size-32"
+    />
+    <div class="app-prose [&>:first-child]:mt-0">
+      <Content />
+    </div>
   </Main>
 
   <Footer />
