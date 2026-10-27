@@ -9,9 +9,14 @@ const { pageTitle, pageDesc, class: className } = Astro.props;
 ---
 
 <main id="main-content" class:list={["app-layout pb-4", className]}>
-  <h1 class="text-2xl font-semibold wrap-break-word sm:text-3xl">
+  <h1
+    class:list={[
+      "text-2xl font-semibold wrap-break-word sm:text-3xl",
+      pageDesc ? null : "mb-6",
+    ]}
+  >
     {pageTitle}
   </h1>
-  <p class="mt-2 mb-6 wrap-break-word italic">{pageDesc}</p>
+  {pageDesc && <p class="mt-2 mb-6 wrap-break-word italic">{pageDesc}</p>}
   <slot />
 </main>

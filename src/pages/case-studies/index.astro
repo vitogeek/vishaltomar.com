@@ -14,7 +14,10 @@ const studies = await getCollection("caseStudies");
 const sortedStudies = getSortedCaseStudies(studies);
 ---
 
-<Layout title={`${copy.pages.caseStudiesTitle} | ${config.site.title}`}>
+<Layout
+  title={`${copy.pages.caseStudiesTitle} | ${config.site.title}`}
+  description={copy.pages.caseStudiesDesc}
+>
   <Header />
 
   <Breadcrumb />

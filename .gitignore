@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # pnpm
 .pnpm-store
+
+# lighthouse
+.lighthouseci/

@@ -8,7 +8,10 @@ import { pagePath } from "@/utils/withBase";
 import config from "@/config";
 ---
 
-<Layout title={`${copy.notFound.title} | ${config.site.title}`}>
+<Layout
+  title={`${copy.notFound.title} | ${config.site.title}`}
+  description={copy.notFound.description}
+>
   <Header />
 
   <main
