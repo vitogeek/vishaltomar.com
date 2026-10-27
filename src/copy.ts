@@ -21,7 +21,7 @@ export const copy = {
   pages: {
     caseStudiesTitle: "Case studies",
     caseStudiesDesc:
-      "[PLACEHOLDER: intro for the case studies index, also used as its meta description. One or two sentences on what the studies show a hiring manager.]",
+      "Problems, decisions and trade-offs from building SaaS in regulated environments.",
     caseStudiesEmpty: "No published case studies yet.",
   },
   a11y: {
