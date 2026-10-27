@@ -4,8 +4,7 @@ import { pagePath } from "./withBase";
 
 /**
  * Production deploys set VERCEL_ENV=production and omit drafts.
- * Every other build (dev, CI, local preview, Vercel preview) includes
- * them so the placeholder study can be reviewed and its MDX renders.
+ * Every other build (dev, CI, local preview, Vercel preview) includes them.
  */
 function includeDraftCaseStudies(): boolean {
   return VERCEL_ENV !== "production";
