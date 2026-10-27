@@ -44,14 +44,6 @@ interface FeaturesConfig {
   showArchives?: boolean;
   /** Show back button on post detail pages. Defaults to true. */
   showBackButton?: boolean;
-  /** "Edit page" link shown on post detail pages. */
-  editPost?:
-    | {
-        enabled: true;
-        /** Base URL for the edit link, e.g. GitHub edit URL */
-        url: string;
-      }
-    | { enabled: false };
 }
 
 interface SocialLink {

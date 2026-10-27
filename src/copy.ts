@@ -10,7 +10,6 @@ export const copy = {
     updatedAt: "Updated",
     backToTop: "Back to top",
     goBack: "Go back",
-    editPage: "Edit page",
     previousPost: "Previous Post",
     nextPost: "Next Post",
   },
