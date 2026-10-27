@@ -5,7 +5,7 @@ export default defineAstroPaperConfig({
     url: "https://vishaltomar.com",
     title: "Vishal Tomar",
     description:
-      "Vishal Tomar is a Toronto-based technical product leader building B2B SaaS for PCI DSS and SOC compliance. Case studies on product decisions, trade-offs and results.",
+      "Vishal Tomar is a Toronto-based technical product leader building SaaS in regulated environments—focusing heavily on compliance, security, risk mitigation, and auditability. Case studies on product decisions, trade-offs and results.",
     author: "Vishal Tomar",
     profile: "https://vishaltomar.com",
     lang: "en-CA",
