@@ -3,17 +3,26 @@ type Props = {
   pageTitle: string | [string, string];
   pageDesc?: string;
   class?: string;
+  /** Keep the h1 in the accessibility tree without showing it. */
+  visuallyHiddenTitle?: boolean;
 };
 
-const { pageTitle, pageDesc, class: className } = Astro.props;
+const {
+  pageTitle,
+  pageDesc,
+  class: className,
+  visuallyHiddenTitle = false,
+} = Astro.props;
 ---
 
 <main id="main-content" class:list={["app-layout pb-4", className]}>
   <h1
-    class:list={[
-      "text-2xl font-semibold wrap-break-word sm:text-3xl",
-      pageDesc ? null : "mb-6",
-    ]}
+    class:list={visuallyHiddenTitle
+      ? "sr-only"
+      : [
+          "text-2xl font-semibold wrap-break-word sm:text-3xl",
+          pageDesc ? null : "mb-6",
+        ]}
   >
     {pageTitle}
   </h1>
