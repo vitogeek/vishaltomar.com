@@ -76,3 +76,34 @@ jobs:
 
       - name: Run Lighthouse CI
         run: pnpm exec lhci autorun
+
+      - name: Print Lighthouse scores
+        if: always()
+        run: node --input-type=module -e '
+          import { readFileSync } from "node:fs";
+          const manifest = JSON.parse(
+            readFileSync(".lighthouseci/manifest.json", "utf8")
+          );
+          const byUrl = new Map();
+          for (const entry of manifest) {
+            const runs = byUrl.get(entry.url) ?? [];
+            runs.push(entry.summary);
+            byUrl.set(entry.url, runs);
+          }
+          const median = (values) => {
+            const sorted = [...values].sort((a, b) => a - b);
+            return sorted[Math.floor((sorted.length - 1) / 2)];
+          };
+          const keys = [
+            "performance",
+            "accessibility",
+            "best-practices",
+            "seo",
+          ];
+          for (const [url, runs] of byUrl) {
+            const scores = keys.map(
+              (key) => `${key}=${median(runs.map((run) => run[key]))}`
+            );
+            console.log(`${new URL(url).pathname} ${scores.join(" ")}`);
+          }
+        '
