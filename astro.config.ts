@@ -24,6 +24,12 @@ import config from "./astro-paper.config";
 export default defineConfig({
   site: config.site.url,
   trailingSlash: "always",
+  redirects: {
+    "/contact/": {
+      status: 301,
+      destination: "/about/",
+    },
+  },
   integrations: [mdx(), sitemap()],
   markdown: {
     processor: unified({

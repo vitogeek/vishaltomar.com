@@ -58,7 +58,7 @@ interface AstroPaperConfig {
   site: SiteConfig;
   caseStudies?: CaseStudiesConfig;
   features?: FeaturesConfig;
-  /** Social profile links. The footer and contact page share these URLs. */
+  /** Social profile links. The footer and the About page share these URLs. */
   socials?: SocialLink[];
 }
 
