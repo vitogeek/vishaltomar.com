@@ -5,7 +5,7 @@ export default defineAstroPaperConfig({
     url: "https://vishaltomar.com",
     title: "Vishal Tomar",
     description:
-      "[PLACEHOLDER: site meta description for the home page, search results, link previews, and the RSS feed. One or two sentences. Lead with product judgment and outcomes. Do not invent employers, years, or achievements.]",
+      "Vishal Tomar is a Toronto-based technical product leader building B2B SaaS for PCI DSS and SOC compliance. Case studies on product decisions, trade-offs and results.",
     author: "Vishal Tomar",
     profile: "https://vishaltomar.com",
     lang: "en-CA",

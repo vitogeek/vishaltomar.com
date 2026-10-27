@@ -7,10 +7,11 @@ export const copy = {
     primary: "Primary",
   },
   home: {
-    positioning: "[PLACEHOLDER: one-line positioning statement]",
-    lede: "[PLACEHOLDER: first sentence. What a hiring manager should remember. Product judgment and outcomes first.]",
+    positioning:
+      "Technical product leader for B2B SaaS in PCI and SOC compliance.",
+    lede: "I turn high-friction problems in regulated products into shipped software, and I align executives, enterprise clients and audit directors on what to build first.",
     support:
-      "[PLACEHOLDER: second sentence. Engineering depth as proof. Do not invent employers, years, achievements, or metrics.]",
+      "Nine years across backend, full-stack, team lead and product roles means I weigh engineering trade-offs as carefully as customer value.",
     featured: "Featured case studies",
     allCaseStudies: "All case studies",
   },
