@@ -50,6 +50,8 @@ interface SocialLink {
    * Override when the default wording doesn't fit.
    */
   linkTitle?: string;
+  /** Visible text shown with the icon. Icon-only links use linkTitle. */
+  label?: string;
 }
 
 interface AstroPaperConfig {

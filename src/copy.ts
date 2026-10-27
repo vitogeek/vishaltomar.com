@@ -28,10 +28,6 @@ export const copy = {
     contactBody:
       "You can find my professional updates on LinkedIn. Message me there, or send me an email.",
   },
-  contactLinks: {
-    linkedin: "LinkedIn",
-    github: "GitHub",
-  },
   a11y: {
     skipToContent: "Skip to content",
     openMenu: "Open menu",

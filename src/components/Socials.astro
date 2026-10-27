@@ -1,15 +1,9 @@
 ---
 import config from "@/config";
-import { copy } from "@/copy";
 import LinkButton from "./LinkButton.astro";
 
 type Props = {
-  /**
-   * Show each icon with a visible text label. Icons stay decorative.
-   * The footer leaves this off and keeps icon-only links.
-   */
   labelled?: boolean;
-  /** Config `name` values, in the order to render. Defaults to config order. */
   names?: string[];
 };
 
@@ -20,60 +14,23 @@ const icons = import.meta.glob<{
   default: (_props: Record<string, unknown>) => unknown;
 }>("/src/assets/icons/socials/*.svg");
 
-const byName = new Map(socials.map(social => [social.name, social]));
-
-if (names) {
-  for (const name of names) {
-    if (!byName.has(name)) {
-      throw new Error(
-        `Unknown social "${name}". Add it to astro-paper.config.ts.`
-      );
-    }
-  }
-}
-
-const brandLabels: Record<string, string> = {
-  github: copy.contactLinks.github,
-  linkedin: copy.contactLinks.linkedin,
-};
-
-const isMail = (name: string, url: string) =>
-  url.startsWith("mailto:") || name === "mail";
-
-const visibleLabel = (name: string, url: string) => {
-  if (isMail(name, url)) {
-    const address = url.startsWith("mailto:")
-      ? url.slice("mailto:".length).split("?")[0]
-      : "";
-    return address || "Email";
-  }
-
-  return brandLabels[name] ?? name.charAt(0).toUpperCase() + name.slice(1);
-};
-
-const iconTitle = (name: string, url: string, linkTitle?: string) =>
-  linkTitle ??
-  (isMail(name, url)
-    ? `Send an email to ${site.title}`
-    : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
-
-const selected = names ?? socials.map(social => social.name);
+const selected = names
+  ? names.flatMap(name => socials.filter(social => social.name === name))
+  : socials;
 
 const items = await Promise.all(
-  selected.map(async name => {
-    const social = byName.get(name);
-    if (!social) return null;
-
+  selected.map(async ({ name, url, linkTitle, label }) => {
     const mod = await icons[`/src/assets/icons/socials/${name}.svg`]?.();
     const Icon = mod?.default;
     if (!Icon) return null;
 
-    return {
-      url: social.url,
-      title: iconTitle(name, social.url, social.linkTitle),
-      label: visibleLabel(name, social.url),
-      Icon,
-    };
+    const title =
+      linkTitle ??
+      (url.startsWith("mailto:") || name === "mail"
+        ? `Send an email to ${site.title}`
+        : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
+
+    return { url, title, label, Icon };
   })
 );
 
