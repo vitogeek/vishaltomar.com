@@ -11,17 +11,10 @@ It is built with Astro and [AstroPaper](https://github.com/satnaing/astro-paper)
 ```sh
 pnpm install
 pnpm dev
-pnpm build
-pnpm preview
-pnpm check
-pnpm lint
-pnpm format
-pnpm format:check
 ```
 
 | Command             | Runs                 |
 | ------------------- | -------------------- |
-| `pnpm dev`          | `astro dev`          |
 | `pnpm build`        | `astro build`        |
 | `pnpm preview`      | `astro preview`      |
 | `pnpm check`        | `astro check`        |
@@ -157,13 +150,7 @@ In that source:
 
 `lighthouserc.json` sets `numberOfRuns` to `3` and `aggregationMethod` to `median`. Each category must score at least `0.95`, or the job fails: performance, accessibility, best-practices, and seo.
 
-Add a URL in `ci.collect.url` in `lighthouserc.json`. The file currently lists:
-
-- `/`
-- `/about/`
-- `/case-studies/`
-- `/case-studies/example/`
-- `/case-studies/versioned-ai-prompts/`
+Add a new URL to `ci.collect.url` in `lighthouserc.json`.
 
 ## Deploys
 
