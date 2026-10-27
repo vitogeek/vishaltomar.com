@@ -1,37 +1,23 @@
 export const copy = {
   nav: {
     home: "Home",
-    posts: "Posts",
-    tags: "Tags",
+    caseStudies: "Case studies",
     about: "About",
-    archives: "Archives",
-  },
-  post: {
-    updatedAt: "Updated",
-    backToTop: "Back to top",
-    goBack: "Go back",
-    previousPost: "Previous Post",
-    nextPost: "Next Post",
   },
   home: {
     socialLinks: "Social links",
     featured: "Featured",
-    recentPosts: "Recent posts",
-    allPosts: "All posts",
+    recentCaseStudies: "Recent case studies",
+    allCaseStudies: "All case studies",
   },
   footer: {
     copyright: "Copyright",
     allRightsReserved: "All rights reserved.",
   },
   pages: {
-    tagTitle: "Tag",
-    tagDesc: "All the articles with the tag",
-    tagsTitle: "Tags",
-    tagsDesc: "All the tags used in posts.",
-    postsTitle: "Posts",
-    postsDesc: "All the articles I've posted.",
-    archivesTitle: "Archives",
-    archivesDesc: "All the articles I've archived.",
+    caseStudiesTitle: "Case studies",
+    caseStudiesDesc: "[PLACEHOLDER: case studies index description]",
+    caseStudiesEmpty: "No published case studies yet.",
   },
   a11y: {
     skipToContent: "Skip to content",

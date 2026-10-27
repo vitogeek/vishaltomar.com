@@ -1,0 +1,40 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
+import { copy } from "@/copy";
+import { getSortedCaseStudies } from "@/utils/caseStudies";
+import config from "@/config";
+
+const studies = await getCollection("caseStudies");
+const sortedStudies = getSortedCaseStudies(studies);
+---
+
+<Layout title={`${copy.pages.caseStudiesTitle} | ${config.site.title}`}>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main
+    pageTitle={copy.pages.caseStudiesTitle}
+    pageDesc={copy.pages.caseStudiesDesc}
+  >
+    {
+      sortedStudies.length === 0 ? (
+        <p>{copy.pages.caseStudiesEmpty}</p>
+      ) : (
+        <ul>
+          {sortedStudies.map(study => (
+            <Card {...study} />
+          ))}
+        </ul>
+      )
+    }
+  </Main>
+
+  <Footer />
+</Layout>

@@ -21,13 +21,7 @@ import config from "./astro-paper.config";
 
 export default defineConfig({
   site: config.site.url,
-  integrations: [
-    mdx(),
-    sitemap({
-      filter: page =>
-        config.features?.showArchives !== false || !page.endsWith("/archives/"),
-    }),
-  ],
+  integrations: [mdx(), sitemap()],
   markdown: {
     processor: unified({
       remarkPlugins: [
@@ -67,6 +61,11 @@ export default defineConfig({
       PUBLIC_GOOGLE_SITE_VERIFICATION: envField.string({
         access: "public",
         context: "client",
+        optional: true,
+      }),
+      VERCEL_ENV: envField.string({
+        access: "public",
+        context: "server",
         optional: true,
       }),
     },

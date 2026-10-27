@@ -1,0 +1,43 @@
+---
+type MetricCallout = {
+  kind: "metric";
+  value: string;
+  label: string;
+};
+
+type QuoteCallout = {
+  kind: "quote";
+  quote: string;
+  attribution?: string;
+};
+
+type Props = MetricCallout | QuoteCallout;
+
+const props = Astro.props;
+---
+
+{
+  props.kind === "metric" ? (
+    <div class="border-accent bg-muted not-prose my-8 border-s-4 px-5 py-4">
+      <p class="text-foreground text-4xl font-semibold tracking-tight wrap-break-word sm:text-5xl">
+        {props.value}
+      </p>
+      <p class="text-foreground mt-2 text-sm leading-snug font-medium wrap-break-word">
+        {props.label}
+      </p>
+    </div>
+  ) : (
+    <figure class="border-accent bg-muted not-prose my-8 border-s-4 px-5 py-4">
+      <blockquote>
+        <p class="text-foreground text-xl leading-relaxed font-medium wrap-break-word before:me-1 before:content-['“'] after:content-['”']">
+          {props.quote}
+        </p>
+      </blockquote>
+      {props.attribution && (
+        <figcaption class="text-foreground mt-3 text-sm leading-snug wrap-break-word">
+          — {props.attribution}
+        </figcaption>
+      )}
+    </figure>
+  )
+}
