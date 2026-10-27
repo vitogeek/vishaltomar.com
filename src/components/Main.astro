@@ -12,19 +12,24 @@ const {
   class: className,
   visuallyHiddenTitle = false,
 } = Astro.props;
+
+const titleClass = [
+  "text-2xl font-semibold wrap-break-word sm:text-3xl",
+  pageDesc ? null : "mb-6",
+];
 ---
 
 <main id="main-content" class:list={["app-layout pb-4", className]}>
-  <h1
-    class:list={visuallyHiddenTitle
-      ? "sr-only"
-      : [
-          "text-2xl font-semibold wrap-break-word sm:text-3xl",
-          pageDesc ? null : "mb-6",
-        ]}
-  >
+  <h1 class:list={visuallyHiddenTitle ? "sr-only" : titleClass}>
     {pageTitle}
   </h1>
+  {
+    visuallyHiddenTitle && (
+      <div aria-hidden="true" class:list={["invisible", titleClass]}>
+        {pageTitle}
+      </div>
+    )
+  }
   {pageDesc && <p class="mt-2 mb-6 wrap-break-word italic">{pageDesc}</p>}
   <slot />
 </main>
