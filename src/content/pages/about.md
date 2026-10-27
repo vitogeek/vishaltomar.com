@@ -5,7 +5,7 @@ description: "About Vishal Tomar, a Toronto-based technical product leader and s
 
 ## Bio
 
-I grew up in New Delhi, matured in Saskatoon, and now live in Toronto. I'm a Senior Software Engineer at CGVantage, a Canadian cybersecurity firm that does PCI and SOC assessments for Fortune 500 companies. Before that I was its Product Design Lead for nearly four years, where I designed and launched an enterprise compliance platform and led discovery, roadmap and sprint planning for a squad of four developers. Earlier I led engineering at Cubbi, was Technical Product Manager and then backend developer at Diitalk, and was a full-stack developer at Andgo Systems. I have a B.Sc. in Computer Science from the University of Saskatchewan, with minors in Math and Entrepreneurship.
+I grew up in New Delhi, matured in Saskatoon, and now live in Toronto. I'm a Senior Software Engineer at CGVantage, a Canadian cybersecurity firm that does PCI and SOC assessments for Fortune 500 companies. I rejoined in 2026 after nearly four years there as Product Design Lead, from 2022 to 2025, where I designed and launched an enterprise compliance platform and led discovery, roadmap and sprint planning for a squad of four developers. Earlier I led engineering at Cubbi, was Technical Product Manager and then backend developer at Diitalk, and was a full-stack developer at Andgo Systems. I have a B.Sc. in Computer Science from the University of Saskatchewan, with minors in Math and Entrepreneurship.
 
 ## What I'm looking for
 
