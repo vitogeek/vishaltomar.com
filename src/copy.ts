@@ -1,13 +1,17 @@
 export const copy = {
+  contact: "Contact",
   nav: {
     home: "Home",
     caseStudies: "Case studies",
     about: "About",
+    primary: "Primary",
   },
   home: {
-    socialLinks: "Social links",
-    featured: "Featured",
-    recentCaseStudies: "Recent case studies",
+    positioning: "[PLACEHOLDER: one-line positioning statement]",
+    lede: "[PLACEHOLDER: first sentence. What a hiring manager should remember. Product judgment and outcomes first.]",
+    support:
+      "[PLACEHOLDER: second sentence. Engineering depth as proof. Do not invent employers, years, achievements, or metrics.]",
+    featured: "Featured case studies",
     allCaseStudies: "All case studies",
   },
   footer: {
@@ -16,7 +20,8 @@ export const copy = {
   },
   pages: {
     caseStudiesTitle: "Case studies",
-    caseStudiesDesc: "[PLACEHOLDER: case studies index description]",
+    caseStudiesDesc:
+      "[PLACEHOLDER: intro for the case studies index, also used as its meta description. One or two sentences on what the studies show a hiring manager.]",
     caseStudiesEmpty: "No published case studies yet.",
   },
   a11y: {
@@ -27,6 +32,7 @@ export const copy = {
   },
   notFound: {
     title: "404 Not Found",
+    description: "The requested page does not exist.",
     message: "Page not found",
     goHome: "Go back home",
   },

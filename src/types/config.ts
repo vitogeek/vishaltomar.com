@@ -1,11 +1,11 @@
 interface SiteConfig {
   /** Deployed URL of the site, e.g. "https://example.com" */
   url: string;
-  /** Blog title shown in header and meta tags */
+  /** Site title shown in the header and meta tags */
   title: string;
-  /** Short description used in SEO meta and RSS feed */
+  /** Short description used in SEO meta and the RSS feed */
   description: string;
-  /** Default post author name */
+  /** Author name */
   author: string;
   /** Author profile URL (used in structured data) */
   profile?: string;
@@ -13,7 +13,7 @@ interface SiteConfig {
   ogImage?: string;
   /** HTML lang attribute, defaults to "en-CA" */
   lang?: string;
-  /** IANA timezone for post dates, e.g. "America/Toronto" */
+  /** IANA timezone for dates, e.g. "America/Toronto" */
   timezone?: string;
   /** Text direction */
   dir?: "ltr" | "rtl" | "auto";
@@ -22,7 +22,7 @@ interface SiteConfig {
 }
 
 interface CaseStudiesConfig {
-  /** Case studies shown in the recent list on the home page. */
+  /** Newest case studies shown on the home page when none are featured. */
   perIndex?: number;
 }
 

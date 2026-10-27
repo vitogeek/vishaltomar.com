@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   defineConfig,
   envField,
@@ -19,9 +21,35 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
 
+function draftCaseStudySlugs(): string[] {
+  const dir = join(process.cwd(), "src/content/case-studies");
+  return readdirSync(dir).flatMap(name => {
+    if (!name.endsWith(".md") && !name.endsWith(".mdx")) return [];
+    const source = readFileSync(join(dir, name), "utf8");
+    const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(source);
+    if (!frontmatter || !/^draft:\s*true\s*$/m.test(frontmatter[1])) return [];
+    return [name.replace(/\.(md|mdx)$/, "")];
+  });
+}
+
+const draftSlugs = draftCaseStudySlugs();
+
 export default defineConfig({
   site: config.site.url,
-  integrations: [mdx(), sitemap()],
+  trailingSlash: "always",
+  integrations: [
+    mdx(),
+    sitemap({
+      filter(page) {
+        const { pathname } = new URL(page);
+        return !draftSlugs.some(
+          slug =>
+            pathname === `/case-studies/${slug}` ||
+            pathname.startsWith(`/case-studies/${slug}/`)
+        );
+      },
+    }),
+  ],
   markdown: {
     processor: unified({
       remarkPlugins: [

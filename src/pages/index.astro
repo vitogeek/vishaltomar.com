@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
@@ -9,93 +8,66 @@ import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { copy } from "@/copy";
-import { getSortedCaseStudies } from "@/utils/caseStudies";
+import { getHomeCaseStudies } from "@/utils/caseStudies";
 import { pagePath } from "@/utils/withBase";
 import config from "@/config";
 
-const { socials, caseStudies: caseStudiesConfig } = config;
+const { site, caseStudies: caseStudiesConfig } = config;
 
 const studies = await getCollection("caseStudies");
-const sortedStudies = getSortedCaseStudies(studies);
-const featuredStudies = sortedStudies.filter(({ data }) => data.featured);
-const recentStudies = sortedStudies.filter(({ data }) => !data.featured);
+const homeStudies = getHomeCaseStudies(studies, caseStudiesConfig.perIndex);
 ---
 
-<Layout>
+<Layout title={site.title} description={site.description}>
   <Header />
   <main id="main-content" class="app-layout my-1">
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Vishal Tomar
-      </h1>
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
+    <section class="border-border border-b pt-8 pb-8">
+      <h1
+        class="text-3xl font-bold tracking-tight text-balance wrap-break-word sm:text-4xl"
       >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
+        {copy.home.positioning}
+      </h1>
+      <p class="mt-4 text-lg leading-relaxed wrap-break-word">
+        {copy.home.lede}
+      </p>
+      <p class="mt-3 leading-relaxed wrap-break-word">{copy.home.support}</p>
+      <section class="mt-8" aria-labelledby="home-contact">
+        <h2 id="home-contact" class="text-sm font-medium tracking-wide">
+          {copy.contact}
+        </h2>
+        <div class="mt-2">
+          <Socials />
+        </div>
+      </section>
+    </section>
 
-      <p>[PLACEHOLDER: introduction]</p>
+    <section class="pt-12 pb-6" aria-labelledby="featured-case-studies">
+      <h2
+        id="featured-case-studies"
+        class="text-2xl font-semibold tracking-wide wrap-break-word"
+      >
+        {copy.home.featured}
+      </h2>
       {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {copy.home.socialLinks}:
-            </div>
-            <Socials />
-          </div>
+        homeStudies.length === 0 ? (
+          <p class="mt-6 wrap-break-word">{copy.pages.caseStudiesEmpty}</p>
+        ) : (
+          <ul>
+            {homeStudies.map(study => (
+              <Card variant="h3" {...study} />
+            ))}
+          </ul>
         )
       }
     </section>
 
-    {
-      featuredStudies.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentStudies.length > 0 },
-          ]}
-        >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {copy.home.featured}
-          </h2>
-          <ul>
-            {featuredStudies.map(study => (
-              <Card variant="h3" {...study} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    {
-      recentStudies.length > 0 && (
-        <section id="recent-case-studies" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {copy.home.recentCaseStudies}
-          </h2>
-          <ul>
-            {recentStudies.slice(0, caseStudiesConfig.perIndex).map(study => (
-              <Card variant="h3" {...study} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    <div class="my-8 text-center">
-      <LinkButton href={pagePath("case-studies")}>
+    <div class="mt-4 mb-8">
+      <LinkButton href={pagePath("case-studies")} class="text-lg">
         {copy.home.allCaseStudies}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
+        <IconArrowRight
+          class="inline-block rtl:-rotate-180"
+          aria-hidden="true"
+        />
       </LinkButton>
     </div>
   </main>

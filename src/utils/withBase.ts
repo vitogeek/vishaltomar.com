@@ -32,11 +32,13 @@ export function getAssetPath(path: string): string {
   return baseRoot + normalizedPath;
 }
 
-/** Page path with the configured Astro base. Single locale, no prefix. */
+/** Page path with the configured Astro base. Directory routes keep a trailing slash. */
 export function pagePath(path = ""): string {
   const normalized = path.replace(/^\/+|\/+$/g, "");
   if (!normalized) {
     return base === "" ? "/" : `${base}/`;
   }
-  return `${baseRoot}${normalized}`;
+  const href = `${baseRoot}${normalized}`;
+  if (/\.[a-z0-9]+$/i.test(normalized)) return href;
+  return `${href}/`;
 }
