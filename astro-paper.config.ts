@@ -36,7 +36,7 @@ export default defineAstroPaperConfig({
       name: "mail",
       url: "mailto:hi@vishaltomar.com",
       linkTitle: "Send an email to Vishal Tomar",
-      label: "hi@vishaltomar.com",
+      label: "Email",
     },
   ],
 });
