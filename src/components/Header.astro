@@ -1,11 +1,8 @@
 ---
-import IconUnderline from "@/assets/icons/IconUnderline.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
-import IconArchive from "@/assets/icons/IconArchive.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
-import LinkButton from "./LinkButton.astro";
 import { pagePath, stripBase } from "@/utils/withBase";
 import { copy } from "@/copy";
 import config from "@/config";
@@ -67,18 +64,10 @@ const isActive = (path: string) => {
       >
         <li class="col-span-2">
           <a
-            href={pagePath("posts")}
-            class:list={{ "active-nav": isActive("/posts") }}
+            href={pagePath("case-studies")}
+            class:list={{ "active-nav": isActive("/case-studies") }}
           >
-            {copy.nav.posts}
-          </a>
-        </li>
-        <li class="col-span-2">
-          <a
-            href={pagePath("tags")}
-            class:list={{ "active-nav": isActive("/tags") }}
-          >
-            {copy.nav.tags}
+            {copy.nav.caseStudies}
           </a>
         </li>
         <li class="col-span-2">
@@ -89,30 +78,6 @@ const isActive = (path: string) => {
             {copy.nav.about}
           </a>
         </li>
-        {
-          features.showArchives && (
-            <li class="col-span-2">
-              <LinkButton
-                href={pagePath("archives")}
-                class:list={[
-                  "focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0",
-                  { "active-nav": isActive("/archives") },
-                ]}
-                title={copy.nav.archives}
-                aria-label={copy.nav.archives}
-              >
-                <IconArchive class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" />
-                <span class="sm:sr-only">{copy.nav.archives}</span>
-                {isActive("/archives") && (
-                  <IconUnderline
-                    aria-hidden="true"
-                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6"
-                  />
-                )}
-              </LinkButton>
-            </li>
-          )
-        }
         {
           features.lightAndDarkMode && (
             <li class="col-span-2 flex items-center justify-center">

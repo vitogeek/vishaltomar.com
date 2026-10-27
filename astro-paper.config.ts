@@ -11,15 +11,12 @@ export default defineAstroPaperConfig({
     timezone: "America/Toronto",
     dir: "ltr",
   },
-  posts: {
+  caseStudies: {
     perIndex: 4,
-    scheduledPostMargin: 15 * 60 * 1000,
   },
   features: {
     lightAndDarkMode: true,
     dynamicOgImage: true,
-    showArchives: true,
-    showBackButton: true,
   },
   socials: [
     {

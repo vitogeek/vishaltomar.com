@@ -4,25 +4,31 @@ import { fontData, experimental_getFontFileURL } from "astro:assets";
 import satori from "satori";
 import sharp from "sharp";
 import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
-import { getPostSlug } from "@/utils/getPostPaths";
+import { getSortedCaseStudies } from "@/utils/caseStudies";
 import config from "@/config";
+
+type OgEntry = {
+  title: string;
+  role: string;
+};
 
 export async function getStaticPaths() {
   if (!config.features.dynamicOgImage) {
     return [];
   }
 
-  const posts = await getCollection("posts").then(p =>
-    p.filter(({ data }) => !data.draft && !data.ogImage)
-  );
+  const studies = await getCollection("caseStudies");
 
-  return posts.map(post => ({
-    params: { slug: getPostSlug(post.id, post.filePath) },
-    props: post,
+  return getSortedCaseStudies(studies).map(study => ({
+    params: { slug: study.id },
+    props: {
+      title: study.data.title,
+      role: study.data.role,
+    } satisfies OgEntry,
   }));
 }
 
-export const GET: APIRoute = async ({ props, url }) => {
+export const GET: APIRoute<OgEntry> = async ({ props, url }) => {
   if (!config.features.dynamicOgImage) {
     return new Response(null, { status: 404, statusText: "Not found" });
   }
@@ -105,12 +111,13 @@ export const GET: APIRoute = async ({ props, url }) => {
                       type: "p",
                       props: {
                         style: {
-                          fontSize: 72,
+                          fontSize: 48,
                           fontWeight: "bold",
+                          lineHeight: 1.15,
                           maxHeight: "84%",
                           overflow: "hidden",
                         },
-                        children: props.data.title,
+                        children: props.title,
                       },
                     },
                     {
@@ -127,26 +134,8 @@ export const GET: APIRoute = async ({ props, url }) => {
                           {
                             type: "span",
                             props: {
-                              children: [
-                                "by ",
-                                {
-                                  type: "span",
-                                  props: {
-                                    style: { color: "transparent" },
-                                    children: '"',
-                                  },
-                                },
-                                {
-                                  type: "span",
-                                  props: {
-                                    style: {
-                                      overflow: "hidden",
-                                      fontWeight: "bold",
-                                    },
-                                    children: props.data.author,
-                                  },
-                                },
-                              ],
+                              style: { overflow: "hidden", fontWeight: "bold" },
+                              children: props.role,
                             },
                           },
                           {

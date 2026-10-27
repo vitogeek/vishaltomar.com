@@ -20,16 +20,12 @@ const config: ResolvedAstroPaperConfig = {
     googleVerification:
       userConfig.site.googleVerification || PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
-  posts: {
-    perIndex: userConfig.posts?.perIndex ?? 4,
-    scheduledPostMargin:
-      userConfig.posts?.scheduledPostMargin ?? 15 * 60 * 1000,
+  caseStudies: {
+    perIndex: userConfig.caseStudies?.perIndex ?? 4,
   },
   features: {
     lightAndDarkMode: userConfig.features?.lightAndDarkMode ?? true,
     dynamicOgImage: userConfig.features?.dynamicOgImage ?? true,
-    showArchives: userConfig.features?.showArchives ?? true,
-    showBackButton: userConfig.features?.showBackButton ?? true,
   },
   socials: userConfig.socials ?? [],
 };

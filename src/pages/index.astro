@@ -9,27 +9,21 @@ import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { copy } from "@/copy";
-import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getSortedCaseStudies } from "@/utils/caseStudies";
 import { pagePath } from "@/utils/withBase";
 import config from "@/config";
 
-const { socials, posts: postsConfig } = config;
+const { socials, caseStudies: caseStudiesConfig } = config;
 
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const homePath = pagePath();
+const studies = await getCollection("caseStudies");
+const sortedStudies = getSortedCaseStudies(studies);
+const featuredStudies = sortedStudies.filter(({ data }) => data.featured);
+const recentStudies = sortedStudies.filter(({ data }) => !data.featured);
 ---
 
 <Layout>
   <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout my-1"
-  >
+  <main id="main-content" class="app-layout my-1">
     <section id="hero" class="border-border border-b pt-8 pb-6">
       <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
         Vishal Tomar
@@ -63,20 +57,20 @@ const homePath = pagePath();
     </section>
 
     {
-      featuredPosts.length > 0 && (
+      featuredStudies.length > 0 && (
         <section
           id="featured"
           class:list={[
             "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
+            { "border-border border-b": recentStudies.length > 0 },
           ]}
         >
           <h2 class="text-2xl font-semibold tracking-wide">
             {copy.home.featured}
           </h2>
           <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
+            {featuredStudies.map(study => (
+              <Card variant="h3" {...study} />
             ))}
           </ul>
         </section>
@@ -84,14 +78,14 @@ const homePath = pagePath();
     }
 
     {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
+      recentStudies.length > 0 && (
+        <section id="recent-case-studies" class="pt-12 pb-6">
           <h2 class="text-2xl font-semibold tracking-wide">
-            {copy.home.recentPosts}
+            {copy.home.recentCaseStudies}
           </h2>
           <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
+            {recentStudies.slice(0, caseStudiesConfig.perIndex).map(study => (
+              <Card variant="h3" {...study} />
             ))}
           </ul>
         </section>
@@ -99,22 +93,11 @@ const homePath = pagePath();
     }
 
     <div class="my-8 text-center">
-      <LinkButton href={pagePath("posts")}>
-        {copy.home.allPosts}
+      <LinkButton href={pagePath("case-studies")}>
+        {copy.home.allCaseStudies}
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>
     </div>
   </main>
   <Footer />
 </Layout>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset;
-    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-    if (indexLayout?.layout) {
-      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
-    }
-  });
-</script>

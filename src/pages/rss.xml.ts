@@ -1,22 +1,21 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { getPostUrl } from "@/utils/getPostPaths";
+import { caseStudyPath, getSortedCaseStudies } from "@/utils/caseStudies";
 import config from "@/config";
 
 export async function GET() {
-  const posts = await getCollection("posts");
-  const sortedPosts = getSortedPosts(posts);
+  const studies = await getCollection("caseStudies");
+  const sortedStudies = getSortedCaseStudies(studies);
 
   return rss({
     title: config.site.title,
     description: config.site.description,
     site: config.site.url,
-    items: sortedPosts.map(({ data, id, filePath }) => ({
-      link: getPostUrl(id, filePath),
+    items: sortedStudies.map(({ data, id }) => ({
+      link: caseStudyPath(id),
       title: data.title,
-      description: data.description,
-      pubDate: new Date(data.modDatetime ?? data.pubDatetime),
+      description: data.summary,
+      pubDate: data.pubDatetime,
     })),
   });
 }

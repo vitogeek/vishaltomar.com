@@ -21,29 +21,20 @@ interface SiteConfig {
   googleVerification?: string;
 }
 
-interface PostsConfig {
-  /** Posts shown on the index/home page */
+interface CaseStudiesConfig {
+  /** Case studies shown in the recent list on the home page. */
   perIndex?: number;
-  /**
-   * Scheduled posts within this window (ms) of their pubDatetime
-   * are shown as published. Defaults to 15 minutes.
-   */
-  scheduledPostMargin?: number;
 }
 
 interface FeaturesConfig {
   /** Enable light/dark mode toggle. Defaults to true. */
   lightAndDarkMode?: boolean;
   /**
-   * Generate dynamic OG images per post and provide `/og.png` when the static
-   * `public/{site.ogImage}` file is absent. When false, that file is required
-   * for the default layout OG image (build fails if missing).
+   * Generate a dynamic OG image per case study and provide `/og.png` when the
+   * static `public/{site.ogImage}` file is absent. When false, that file is
+   * required for the default layout OG image (build fails if missing).
    */
   dynamicOgImage?: boolean;
-  /** Show the /archives page and link it in nav. Defaults to true. */
-  showArchives?: boolean;
-  /** Show back button on post detail pages. Defaults to true. */
-  showBackButton?: boolean;
 }
 
 interface SocialLink {
@@ -63,7 +54,7 @@ interface SocialLink {
 
 interface AstroPaperConfig {
   site: SiteConfig;
-  posts?: PostsConfig;
+  caseStudies?: CaseStudiesConfig;
   features?: FeaturesConfig;
   /** Social profile links shown in header/footer */
   socials?: SocialLink[];
@@ -86,7 +77,7 @@ type ResolvedSiteConfig = Required<
 
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;
-  posts: Required<PostsConfig>;
+  caseStudies: Required<CaseStudiesConfig>;
   features: Required<FeaturesConfig>;
   socials: SocialLink[];
 }

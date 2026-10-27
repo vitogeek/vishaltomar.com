@@ -1,0 +1,48 @@
+---
+interface Props {
+  src: string;
+  caption: string;
+  width: number;
+  height: number;
+  poster?: string;
+}
+
+const { src, caption, width, height, poster } = Astro.props;
+---
+
+<figure class="not-prose my-8">
+  <video
+    class="border-border h-auto w-full border"
+    data-case-video
+    width={width}
+    height={height}
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    controls
+    poster={poster}
+  >
+    <source {src} type="video/mp4" />
+  </video>
+  <figcaption class="text-foreground mt-2 text-sm leading-snug">
+    {caption}
+  </figcaption>
+</figure>
+
+<script>
+  function initCaseVideos() {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    document.querySelectorAll("[data-case-video]").forEach(node => {
+      if (!(node instanceof HTMLVideoElement)) return;
+      if (reduceMotion) node.pause();
+      else void node.play();
+    });
+  }
+
+  initCaseVideos();
+  document.addEventListener("astro:page-load", initCaseVideos);
+</script>
