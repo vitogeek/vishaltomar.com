@@ -25,7 +25,7 @@ const captionId = `case-video-caption-${src
     playsinline
     preload="none"
     controls
-    data-poster={poster}
+    poster={poster}
     aria-label={label}
     aria-labelledby={label ? undefined : captionId}
   >
@@ -48,7 +48,6 @@ const captionId = `case-video-caption-${src
       node.dataset.caseVideoBound = "true";
 
       const start = () => {
-        if (node.dataset.poster) node.poster = node.dataset.poster;
         if (reduceMotion) {
           node.pause();
           return;
