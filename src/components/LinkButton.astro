@@ -1,9 +1,38 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import config from "@/config";
+import { OPENS_IN_NEW_TAB, isExternal } from "@/utils/externalHref";
 
 type Props = { disabled?: boolean } & HTMLAttributes<"a">;
 
-const { disabled, class: className, ...attrs } = Astro.props;
+const {
+  disabled,
+  class: className,
+  href,
+  rel,
+  target,
+  "aria-label": ariaLabel,
+  ...attrs
+} = Astro.props;
+
+const external =
+  disabled !== true &&
+  typeof href === "string" &&
+  isExternal(href, config.site.url);
+const relValue = external
+  ? [
+      ...new Set(
+        `${rel ?? ""} noopener noreferrer`.split(/\s+/).filter(Boolean)
+      ),
+    ].join(" ")
+  : rel;
+const hasLabel = typeof ariaLabel === "string" && ariaLabel.length > 0;
+const ariaLabelValue =
+  external && hasLabel
+    ? ariaLabel.includes(OPENS_IN_NEW_TAB.trim())
+      ? ariaLabel
+      : `${ariaLabel}${OPENS_IN_NEW_TAB}`
+    : ariaLabel;
 
 const Button = disabled ? "span" : "a";
 ---
@@ -16,6 +45,11 @@ const Button = disabled ? "span" : "a";
     className,
   ]}
   {...attrs}
+  href={href}
+  rel={relValue}
+  target={external ? "_blank" : target}
+  aria-label={ariaLabelValue}
 >
   <slot />
+  {external && !hasLabel && <span class="sr-only">{OPENS_IN_NEW_TAB}</span>}
 </Button>

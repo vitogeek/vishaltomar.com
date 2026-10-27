@@ -29,6 +29,9 @@ importers:
       rehype-callouts:
         specifier: ^2.2.0
         version: 2.2.0
+      rehype-external-links:
+        specifier: ^3.0.0
+        version: 3.0.0
       remark-collapse:
         specifier: ^0.1.2
         version: 0.1.2
@@ -66,6 +69,9 @@ importers:
       eslint-plugin-astro:
         specifier: ^2.1.1
         version: 2.1.1(@typescript-eslint/parser@8.62.0(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0))
+      node-html-parser:
+        specifier: ^9.0.5
+        version: 9.0.5
       prettier:
         specifier: 3.9.3
         version: 3.9.3
@@ -2292,6 +2298,10 @@ packages:
   iron-webcrypto@1.2.1:
     resolution: {integrity: sha512-feOM6FaSr6rEABp/eDfVseKyTMDt+KGpeB35SkVn9Tyn0CqvVsY3EwI0v5i8nMHyJnzCIQf7nsy3p41TPkJZhg==}
 
+  is-absolute-url@4.0.1:
+    resolution: {integrity: sha512-/51/TKE88Lmm7Gc4/8btclNXWS+g50wXhYJq8HWIBAGUBnoAdRu1aXeh364t/O7wXDAcTJDP8PNuNKWUDWie+A==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
   is-alphabetical@2.0.1:
     resolution: {integrity: sha512-FWyyY60MeTNyeSRpkM2Iry0G9hpr7/9kD40mD/cGQEuilcZYS4okz8SN2Q6rLCJ8gbCt6fN+rC+6tMGS99LaxQ==}
 
@@ -2846,6 +2856,9 @@ packages:
       encoding:
         optional: true
 
+  node-html-parser@9.0.5:
+    resolution: {integrity: sha512-LpUc74Ax3L6AsxTEqoep0GDqCBbsPjtn74sYaiazxGXfwhe6iqD4E5sHTJFCU+wBxVMX+Dd7mvLim0QM1vsvpw==}
+
   node-mock-http@1.0.4:
     resolution: {integrity: sha512-8DY+kFsDkNXy1sJglUfuODx1/opAGJGyrTuFqEoN90oRc2Vk0ZbD4K2qmKXBBEhZQzdKHIVfEJpDU8Ak2NJEvQ==}
 
@@ -3182,6 +3195,9 @@ packages:
   rehype-callouts@2.2.0:
     resolution: {integrity: sha512-snwN1LkjLM3SuymqpsoLonoJ8gVy5yJN9WztBiyj8HAAj5Mv3Fez5vFzVwscLQdzMZo27xv2FycGzAGDkT4dNw==}
     engines: {node: '>=18.0.0'}
+
+  rehype-external-links@3.0.0:
+    resolution: {integrity: sha512-yp+e5N9V3C6bwBeAC4n796kc86M4gJCdlVhiMTxIrJG5UHDMh+PJANf9heqORJbt1nrCbDwIlAZKjANIaVBbvw==}
 
   rehype-parse@9.0.1:
     resolution: {integrity: sha512-ksCzCD0Fgfh7trPDxr2rSylbwq9iYDkSn8TCDmEJ49ljEUBxDVCzCHv7QNzZOfODanX4+bWQ4WZqLCRWYLfhag==}
@@ -6441,6 +6457,8 @@ snapshots:
 
   iron-webcrypto@1.2.1: {}
 
+  is-absolute-url@4.0.1: {}
+
   is-alphabetical@2.0.1: {}
 
   is-alphanumerical@2.0.1:
@@ -7216,6 +7234,11 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
+  node-html-parser@9.0.5:
+    dependencies:
+      css-select: 5.2.2
+      entities: 8.0.0
+
   node-mock-http@1.0.4: {}
 
   normalize-path@3.0.0: {}
@@ -7540,6 +7563,15 @@ snapshots:
       hast-util-from-html: 2.0.3
       hast-util-is-element: 3.0.0
       hastscript: 9.0.1
+      unist-util-visit: 5.1.0
+
+  rehype-external-links@3.0.0:
+    dependencies:
+      '@types/hast': 3.0.4
+      '@ungap/structured-clone': 1.3.1
+      hast-util-is-element: 3.0.0
+      is-absolute-url: 4.0.1
+      space-separated-tokens: 2.0.2
       unist-util-visit: 5.1.0
 
   rehype-parse@9.0.1:

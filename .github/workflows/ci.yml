@@ -45,6 +45,9 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Check external links
+        run: pnpm run check:links
+
   lighthouse:
     name: Lighthouse
     runs-on: ubuntu-latest
