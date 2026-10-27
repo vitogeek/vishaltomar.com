@@ -5,9 +5,10 @@ interface Props {
   width: number;
   height: number;
   poster?: string;
+  label?: string;
 }
 
-const { src, caption, width, height, poster } = Astro.props;
+const { src, caption, width, height, poster, label } = Astro.props;
 const captionId = `case-video-caption-${src
   .replace(/[^a-zA-Z0-9]+/g, "-")
   .replace(/^-|-$/g, "")}`;
@@ -22,10 +23,11 @@ const captionId = `case-video-caption-${src
     muted
     loop
     playsinline
-    preload="metadata"
+    preload="none"
     controls
-    poster={poster}
-    aria-labelledby={captionId}
+    data-poster={poster}
+    aria-label={label}
+    aria-labelledby={label ? undefined : captionId}
   >
     <source {src} type="video/mp4" />
   </video>
@@ -42,8 +44,33 @@ const captionId = `case-video-caption-${src
 
     document.querySelectorAll("[data-case-video]").forEach(node => {
       if (!(node instanceof HTMLVideoElement)) return;
-      if (reduceMotion) node.pause();
-      else void node.play();
+      if (node.dataset.caseVideoBound === "true") return;
+      node.dataset.caseVideoBound = "true";
+
+      const start = () => {
+        if (node.dataset.poster) node.poster = node.dataset.poster;
+        if (reduceMotion) {
+          node.pause();
+          return;
+        }
+        node.preload = "auto";
+        void node.play();
+      };
+
+      if (!("IntersectionObserver" in window)) {
+        start();
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        entries => {
+          if (!entries.some(entry => entry.isIntersecting)) return;
+          start();
+          observer.disconnect();
+        },
+        { rootMargin: "200px 0px" }
+      );
+      observer.observe(node);
     });
   }
 

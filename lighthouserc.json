@@ -7,7 +7,7 @@
         "/about/",
         "/case-studies/",
         "/case-studies/example/",
-        "/case-studies/versioned-ai-prompt/"
+        "/case-studies/versioned-ai-prompts/"
       ],
       "numberOfRuns": 3,
       "settings": {
