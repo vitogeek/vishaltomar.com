@@ -79,6 +79,14 @@ const isActive = (path: string) => {
             {copy.nav.about}
           </a>
         </li>
+        <li class="col-span-2">
+          <a
+            href={pagePath("contact")}
+            class:list={{ "active-nav": isActive("/contact") }}
+          >
+            {copy.nav.contact}
+          </a>
+        </li>
         {
           features.lightAndDarkMode && (
             <li class="col-span-2 flex items-center justify-center">

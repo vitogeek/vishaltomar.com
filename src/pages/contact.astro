@@ -1,0 +1,26 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
+import { copy } from "@/copy";
+
+const pageMeta = copy.pages.contactDesc;
+---
+
+<Layout title={pageMeta} description={pageMeta}>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main pageTitle={copy.pages.contactTitle}>
+    <p class="leading-relaxed wrap-break-word">{copy.pages.contactBody}</p>
+    <div class="mt-6">
+      <Socials labelled names={["linkedin", "mail", "github"]} />
+    </div>
+  </Main>
+
+  <Footer />
+</Layout>
