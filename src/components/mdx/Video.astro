@@ -2,18 +2,20 @@
 interface Props {
   src: string;
   caption: string;
+  width: number;
+  height: number;
   poster?: string;
 }
 
-const { src, caption, poster } = Astro.props;
+const { src, caption, width, height, poster } = Astro.props;
 ---
 
 <figure class="not-prose my-8">
   <video
     class="border-border h-auto w-full border"
     data-case-video
-    width="640"
-    height="360"
+    width={width}
+    height={height}
     muted
     loop
     playsinline
@@ -29,7 +31,6 @@ const { src, caption, poster } = Astro.props;
 </figure>
 
 <script>
-  // Autoplay only when the user has not asked for reduced motion.
   function initCaseVideos() {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
@@ -37,19 +38,8 @@ const { src, caption, poster } = Astro.props;
 
     document.querySelectorAll("[data-case-video]").forEach(node => {
       if (!(node instanceof HTMLVideoElement)) return;
-
-      if (reduceMotion) {
-        node.autoplay = false;
-        node.controls = true;
-        node.pause();
-        return;
-      }
-
-      node.controls = false;
-      node.autoplay = true;
-      void node.play().catch(() => {
-        node.controls = true;
-      });
+      if (reduceMotion) node.pause();
+      else void node.play();
     });
   }
 
