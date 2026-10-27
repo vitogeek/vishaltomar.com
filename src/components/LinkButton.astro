@@ -1,9 +1,39 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import config from "@/config";
+import {
+  externalRelValue,
+  isExternalHttpUrl,
+  OPENS_IN_NEW_TAB,
+} from "@/utils/externalHref";
 
 type Props = { disabled?: boolean } & HTMLAttributes<"a">;
 
-const { disabled, class: className, ...attrs } = Astro.props;
+const {
+  disabled,
+  class: className,
+  href,
+  rel,
+  target,
+  "aria-label": ariaLabel,
+  ...attrs
+} = Astro.props;
+
+const hrefValue =
+  typeof href === "string" ? href : href instanceof URL ? href.href : undefined;
+const external =
+  disabled !== true &&
+  hrefValue !== undefined &&
+  isExternalHttpUrl(hrefValue, config.site.url);
+const relValue = external ? externalRelValue(rel) : rel;
+const targetValue = external ? "_blank" : target;
+const ariaLabelValue =
+  external && typeof ariaLabel === "string" && ariaLabel.length > 0
+    ? ariaLabel.includes(OPENS_IN_NEW_TAB)
+      ? ariaLabel
+      : `${ariaLabel} ${OPENS_IN_NEW_TAB}`
+    : ariaLabel;
+const newTabText = ` ${OPENS_IN_NEW_TAB}`;
 
 const Button = disabled ? "span" : "a";
 ---
@@ -16,6 +46,11 @@ const Button = disabled ? "span" : "a";
     className,
   ]}
   {...attrs}
+  href={href}
+  rel={relValue}
+  target={targetValue}
+  aria-label={ariaLabelValue}
 >
   <slot />
+  {external && <span class="sr-only">{newTabText}</span>}
 </Button>

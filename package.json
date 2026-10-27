@@ -13,6 +13,7 @@
     "sync": "astro sync",
     "astro": "astro",
     "check": "astro check",
+    "check:links": "node scripts/check-external-links.ts",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "lint": "eslint ."
@@ -36,6 +37,7 @@
     "@lhci/cli": "0.15.1",
     "@shikijs/transformers": "^4.3.0",
     "@tailwindcss/typography": "^0.5.20",
+    "@types/node": "^22.20.5",
     "@typescript-eslint/parser": "^8.62.0",
     "eslint": "^10.6.0",
     "eslint-plugin-astro": "^2.1.1",
