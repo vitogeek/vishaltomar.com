@@ -79,7 +79,8 @@ jobs:
 
       - name: Print Lighthouse scores
         if: always()
-        run: node --input-type=module -e '
+        run: |
+          node --input-type=module <<'EOF'
           import { readFileSync } from "node:fs";
           const manifest = JSON.parse(
             readFileSync(".lighthouseci/manifest.json", "utf8")
@@ -106,4 +107,4 @@ jobs:
             );
             console.log(`${new URL(url).pathname} ${scores.join(" ")}`);
           }
-        '
+          EOF
