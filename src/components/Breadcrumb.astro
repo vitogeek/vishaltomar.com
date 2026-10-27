@@ -1,0 +1,58 @@
+---
+import { pagePath, stripBase } from "@/utils/withBase";
+import { copy } from "@/copy";
+
+const pathWithoutBase = stripBase(Astro.url.pathname).replace(/\/+$/, "");
+const breadcrumbList = pathWithoutBase.split("/").slice(1).filter(Boolean);
+
+const decodeSegment = (value: string) => {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+};
+
+const navLabels: Record<string, string> = {
+  posts: copy.nav.posts,
+  tags: copy.nav.tags,
+  about: copy.nav.about,
+  archives: copy.nav.archives,
+};
+---
+
+<nav class="app-layout mt-8 mb-1" aria-label="breadcrumb">
+  <ul
+    class="flex flex-wrap items-center gap-x-1 font-light [&>li:not(:last-child)>a]:hover:opacity-100"
+  >
+    <li class="flex items-center gap-x-1">
+      <a href={pagePath()} class="opacity-80">
+        {copy.nav.home}
+      </a>
+      <span aria-hidden="true" class="opacity-80">&raquo;</span>
+    </li>
+    {
+      breadcrumbList.map((breadcrumb, index) =>
+        index + 1 === breadcrumbList.length ? (
+          <li>
+            <span
+              class:list={["capitalize opacity-75", { lowercase: index > 0 }]}
+              aria-current="page"
+            >
+              {navLabels[breadcrumb] ?? decodeSegment(breadcrumb)}
+            </span>
+          </li>
+        ) : (
+          <li class="flex items-center gap-x-1">
+            <a href={pagePath(breadcrumb)} class="capitalize opacity-70">
+              {navLabels[breadcrumb] ?? decodeSegment(breadcrumb)}
+            </a>
+            <span aria-hidden="true" class="opacity-70">
+              &raquo;
+            </span>
+          </li>
+        )
+      )
+    }
+  </ul>
+</nav>
