@@ -69,7 +69,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        # Preview so the draft sample study is in the static output.
+        # Preview so draft studies are in the static output.
         run: pnpm run build
         env:
           VERCEL_ENV: preview

@@ -7,7 +7,6 @@
         "/about/",
         "/contact/",
         "/case-studies/",
-        "/case-studies/example/",
         "/case-studies/versioned-ai-prompts/"
       ],
       "numberOfRuns": 3,
