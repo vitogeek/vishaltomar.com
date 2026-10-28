@@ -23,6 +23,7 @@ export const copy = {
     openMenu: "Open menu",
     closeMenu: "Close menu",
     toggleTheme: "Toggle theme",
+    backToTop: "Back to top",
   },
   notFound: {
     title: "404 Not Found",
