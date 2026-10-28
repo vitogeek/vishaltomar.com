@@ -7,6 +7,7 @@ import { getAssetPath, pagePath } from "@/utils/withBase";
 import config from "@/config";
 import "@/styles/global.css";
 import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 
 type Props = {
   title?: string;
@@ -85,6 +86,9 @@ const rssHref = pagePath("rss.xml");
 
     <!-- Vercel Web Analytics -->
     <Analytics />
+
+    <!-- Vercel Speed Insights -->
+    <SpeedInsights />
 
     {
       site.googleVerification && (
