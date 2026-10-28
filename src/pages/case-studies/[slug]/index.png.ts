@@ -9,7 +9,7 @@ import config from "@/config";
 
 type OgEntry = {
   title: string;
-  role: string;
+  summary: string;
 };
 
 export async function getStaticPaths() {
@@ -23,7 +23,7 @@ export async function getStaticPaths() {
     params: { slug: study.id },
     props: {
       title: study.data.title,
-      role: study.data.role,
+      summary: study.data.summary,
     } satisfies OgEntry,
   }));
 }
@@ -101,7 +101,6 @@ export const GET: APIRoute<OgEntry> = async ({ props, url }) => {
                   style: {
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "space-between",
                     margin: "20px",
                     width: "90%",
                     height: "90%",
@@ -114,38 +113,22 @@ export const GET: APIRoute<OgEntry> = async ({ props, url }) => {
                           fontSize: 48,
                           fontWeight: "bold",
                           lineHeight: 1.15,
-                          maxHeight: "84%",
-                          overflow: "hidden",
+                          width: "100%",
                         },
                         children: props.title,
                       },
                     },
                     {
-                      type: "div",
+                      type: "p",
                       props: {
                         style: {
-                          display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          marginBottom: "8px",
+                          marginTop: 24,
                           fontSize: 28,
+                          fontWeight: 400,
+                          lineHeight: 1.4,
+                          width: "100%",
                         },
-                        children: [
-                          {
-                            type: "span",
-                            props: {
-                              style: { overflow: "hidden", fontWeight: "bold" },
-                              children: props.role,
-                            },
-                          },
-                          {
-                            type: "span",
-                            props: {
-                              style: { overflow: "hidden", fontWeight: "bold" },
-                              children: config.site.title,
-                            },
-                          },
-                        ],
+                        children: props.summary,
                       },
                     },
                   ],
