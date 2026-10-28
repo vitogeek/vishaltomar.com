@@ -22,7 +22,7 @@ export const copy = {
     skipToContent: "Skip to content",
     openMenu: "Open menu",
     closeMenu: "Close menu",
-    toggleTheme: "Toggle theme",
+    darkMode: "Dark mode",
     backToTop: "Back to top",
   },
   notFound: {
