@@ -20,13 +20,7 @@ const posterSrc =
     ? undefined
     : typeof poster === "string"
       ? poster
-      : (
-          await getImage({
-            src: poster,
-            width: POSTER_WIDTH,
-            height: Math.round((POSTER_WIDTH * poster.height) / poster.width),
-          })
-        ).src;
+      : (await getImage({ src: poster, width: POSTER_WIDTH })).src;
 const captionId = `case-video-caption-${src
   .replace(/[^a-zA-Z0-9]+/g, "-")
   .replace(/^-|-$/g, "")}`;
