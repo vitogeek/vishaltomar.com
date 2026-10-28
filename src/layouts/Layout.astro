@@ -6,6 +6,7 @@ import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath, pagePath } from "@/utils/withBase";
 import config from "@/config";
 import "@/styles/global.css";
+import Analytics from "@vercel/analytics/astro";
 
 type Props = {
   title?: string;
@@ -81,6 +82,9 @@ const rssHref = pagePath("rss.xml");
 
     <!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) -->
     <slot name="head" />
+
+    <!-- Vercel Web Analytics -->
+    <Analytics />
 
     {
       site.googleVerification && (
