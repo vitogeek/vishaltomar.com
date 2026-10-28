@@ -16,3 +16,5 @@ I start by listening to users and stakeholders until we all see the same problem
 ## Beyond the job title
 
 I've worn a lot of hats: coffee shop owner, marketing consultant, photographer, videographer, web developer, tattoo artist and clothing designer. That range is why I can pick up whatever tool an idea needs and explain it to almost any audience.
+
+I've lived in India and Canada for decades and spent months at a time in the USA, Mexico, the Netherlands, Vietnam and Australia. Each place showed me different problems and the different ways people solve them. It has given me a wide range of experiences to draw from. It has taught me to understand users whose needs differ from mine, and it makes me a better problem solver for all kinds of people.
