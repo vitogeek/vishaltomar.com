@@ -1,65 +1,51 @@
 ---
-import { getCollection } from "astro:content";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import { Picture } from "astro:assets";
+import { getEntry, render } from "astro:content";
+import portrait from "@/assets/vishal-tomar.jpg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
-import LinkButton from "@/components/LinkButton.astro";
 import { copy } from "@/copy";
-import { getHomeCaseStudies } from "@/utils/caseStudies";
-import { pagePath } from "@/utils/withBase";
 import config from "@/config";
 
-const { site, caseStudies: caseStudiesConfig } = config;
+const { site } = config;
 
-const studies = await getCollection("caseStudies");
-const homeStudies = getHomeCaseStudies(studies, caseStudiesConfig.perIndex);
+const about = await getEntry("pages", "about");
+
+if (!about) {
+  throw new Error(
+    "Missing content entry: `about.md` or `about.mdx` in `src/content/pages/`"
+  );
+}
+
+const { Content } = await render(about);
 ---
 
 <Layout title={site.title} description={site.description}>
   <Header />
-  <main id="main-content" class="app-layout my-1">
-    <section class="border-border border-b pt-8 pb-8">
-      <h1
-        class="text-3xl font-bold tracking-tight text-balance wrap-break-word sm:text-4xl"
-      >
-        {copy.home.positioning}
-      </h1>
-      <p class="mt-4 text-lg leading-relaxed wrap-break-word">
-        {copy.home.lede}
-      </p>
+  <main id="main-content" class="app-layout pt-8 pb-4">
+    <h1 class="sr-only">Vishal Tomar</h1>
+    <div
+      class="mb-6 flex items-center gap-4 [--row:6rem] sm:gap-6 sm:[--row:8rem]"
+    >
+      <Picture
+        src={portrait}
+        alt="Vishal Tomar"
+        formats={["avif", "webp"]}
+        fallbackFormat="webp"
+        widths={[192, 256]}
+        sizes="(min-width: 40rem) 128px, 96px"
+        width={256}
+        height={256}
+        loading="eager"
+        decoding="sync"
+        fetchpriority="high"
+        class="block aspect-square size-(--row) shrink-0 rounded-full object-cover"
+      />
       <p class="mt-3 leading-relaxed wrap-break-word">{copy.home.support}</p>
-    </section>
-
-    <section class="pt-12 pb-6" aria-labelledby="featured-case-studies">
-      <h2
-        id="featured-case-studies"
-        class="text-2xl font-semibold tracking-wide wrap-break-word"
-      >
-        {copy.home.featured}
-      </h2>
-      {
-        homeStudies.length === 0 ? (
-          <p class="mt-6 wrap-break-word">{copy.pages.caseStudiesEmpty}</p>
-        ) : (
-          <ul>
-            {homeStudies.map(study => (
-              <Card variant="h3" {...study} />
-            ))}
-          </ul>
-        )
-      }
-    </section>
-
-    <div class="mt-4 mb-8">
-      <LinkButton href={pagePath("case-studies")} class="text-lg">
-        {copy.home.allCaseStudies}
-        <IconArrowRight
-          class="inline-block rtl:-rotate-180"
-          aria-hidden="true"
-        />
-      </LinkButton>
+    </div>
+    <div class="app-prose [&>:first-child]:mt-0">
+      <Content />
     </div>
   </main>
   <Footer />

@@ -32,17 +32,6 @@ export function getSortedCaseStudies(
   );
 }
 
-/** Featured studies, or the newest studies when none are featured. */
-export function getHomeCaseStudies(
-  studies: CollectionEntry<"caseStudies">[],
-  limit: number
-): CollectionEntry<"caseStudies">[] {
-  const sorted = getSortedCaseStudies(studies);
-  const featured = sorted.filter(study => study.data.featured);
-  if (featured.length > 0) return featured;
-  return sorted.slice(0, limit);
-}
-
 export function caseStudyPath(id: string): string {
   return pagePath(`case-studies/${id}`);
 }

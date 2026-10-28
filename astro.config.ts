@@ -25,9 +25,13 @@ export default defineConfig({
   site: config.site.url,
   trailingSlash: "always",
   redirects: {
+    "/about/": {
+      status: 301,
+      destination: "/",
+    },
     "/contact/": {
       status: 301,
-      destination: "/about/",
+      destination: "/",
     },
   },
   integrations: [mdx(), sitemap()],

@@ -2,25 +2,14 @@
 import config from "@/config";
 import LinkButton from "./LinkButton.astro";
 
-type Props = {
-  labelled?: boolean;
-  names?: string[];
-  class?: string;
-};
-
-const { labelled = false, names, class: className } = Astro.props;
 const { site, socials } = config;
 
 const icons = import.meta.glob<{
   default: (_props: Record<string, unknown>) => unknown;
 }>("/src/assets/icons/socials/*.svg");
 
-const selected = names
-  ? names.flatMap(name => socials.filter(social => social.name === name))
-  : socials;
-
 const items = await Promise.all(
-  selected.map(async ({ name, url, linkTitle, label }) => {
+  socials.map(async ({ name, url, linkTitle }) => {
     const mod = await icons[`/src/assets/icons/socials/${name}.svg`]?.();
     const Icon = mod?.default;
     if (!Icon) return null;
@@ -31,45 +20,27 @@ const items = await Promise.all(
         ? `Send an email to ${site.title}`
         : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
 
-    return { url, title, label, Icon };
+    return { url, title, Icon };
   })
 );
 
 const links = items.filter(item => item !== null);
 ---
 
-{
-  labelled ? (
-    <ul class:list={["-mx-2 flex flex-col", className]}>
-      {links.map(({ url, label, Icon }) => (
-        <li class="flex min-h-0 flex-1">
-          <LinkButton href={url} class="h-full px-2 text-base">
-            <Icon
-              aria-hidden="true"
-              class="me-2 size-6 shrink-0 fill-transparent stroke-current stroke-2"
-            />
-            <span class="underline decoration-dashed underline-offset-4">
-              {label}
-            </span>
-          </LinkButton>
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <div class="flex flex-wrap items-center gap-2">
-      {links.map(({ url, title, Icon }) => (
-        <LinkButton
-          href={url}
-          class="size-12 justify-center"
-          title={title}
-          aria-label={title}
-        >
-          <Icon
-            aria-hidden="true"
-            class="size-6 fill-transparent stroke-current stroke-2"
-          />
-        </LinkButton>
-      ))}
-    </div>
-  )
-}
+<div class="flex flex-wrap items-center gap-2">
+  {
+    links.map(({ url, title, Icon }) => (
+      <LinkButton
+        href={url}
+        class="size-12 justify-center"
+        title={title}
+        aria-label={title}
+      >
+        <Icon
+          aria-hidden="true"
+          class="size-6 fill-transparent stroke-current stroke-2"
+        />
+      </LinkButton>
+    ))
+  }
+</div>
