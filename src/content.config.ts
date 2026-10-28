@@ -18,7 +18,6 @@ const caseStudies = defineCollection({
       cover: image(),
       coverAlt: z.string(),
       draft: z.boolean().default(false),
-      featured: z.boolean().default(false),
       pubDatetime: z.date(),
     }),
 });

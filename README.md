@@ -41,7 +41,6 @@ Add `src/content/case-studies/<slug>/index.mdx`. The `caseStudies` collection in
 | `cover`       | local image (`image()`) | yes                 |
 | `coverAlt`    | string                  | yes                 |
 | `draft`       | boolean                 | no, default `false` |
-| `featured`    | boolean                 | no, default `false` |
 | `pubDatetime` | date                    | yes                 |
 
 `cover` is a path relative to the MDX file, such as `./cover.png`. `pubDatetime` is a YAML date.
@@ -49,10 +48,6 @@ Add `src/content/case-studies/<slug>/index.mdx`. The `caseStudies` collection in
 ### Draft behaviour
 
 A study with `draft: true` is omitted when `VERCEL_ENV` is `production` (`src/utils/caseStudies.ts`). Dev, `pnpm preview`, CI, and Vercel preview include drafts. The RSS feed excludes drafts in every build.
-
-### Featured on the home page
-
-`featured: true` selects the study for the home page, from the studies included in that build, newest `pubDatetime` first. If any included study is featured, the home page lists those featured studies. If none are featured, it lists the newest included studies, up to `perIndex` (`4` in `astro-paper.config.ts`).
 
 ### `Figure`, `Video`, and `Callout`
 

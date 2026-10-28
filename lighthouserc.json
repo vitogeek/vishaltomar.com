@@ -4,7 +4,6 @@
       "staticDistDir": "./dist",
       "url": [
         "/",
-        "/about/",
         "/case-studies/",
         "/case-studies/versioned-ai-prompts/"
       ],

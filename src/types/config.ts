@@ -21,11 +21,6 @@ interface SiteConfig {
   googleVerification?: string;
 }
 
-interface CaseStudiesConfig {
-  /** Newest case studies shown on the home page when none are featured. */
-  perIndex?: number;
-}
-
 interface FeaturesConfig {
   /** Enable light/dark mode toggle. Defaults to true. */
   lightAndDarkMode?: boolean;
@@ -50,15 +45,12 @@ interface SocialLink {
    * Override when the default wording doesn't fit.
    */
   linkTitle?: string;
-  /** Visible text shown with the icon. Icon-only links use linkTitle. */
-  label?: string;
 }
 
 interface AstroPaperConfig {
   site: SiteConfig;
-  caseStudies?: CaseStudiesConfig;
   features?: FeaturesConfig;
-  /** Social profile links. The footer and the About page share these URLs. */
+  /** Social profile links shown in the footer. */
   socials?: SocialLink[];
 }
 
@@ -79,7 +71,6 @@ type ResolvedSiteConfig = Required<
 
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;
-  caseStudies: Required<CaseStudiesConfig>;
   features: Required<FeaturesConfig>;
   socials: SocialLink[];
 }
