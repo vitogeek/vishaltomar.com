@@ -27,6 +27,8 @@ const {
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
 const rssHref = pagePath("rss.xml");
+
+const isVercel = process.env.VERCEL === "1";
 ---
 
 <!doctype html>
@@ -84,11 +86,14 @@ const rssHref = pagePath("rss.xml");
     <!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) -->
     <slot name="head" />
 
-    <!-- Vercel Web Analytics -->
-    <Analytics />
-
-    <!-- Vercel Speed Insights -->
-    <SpeedInsights />
+    {
+      isVercel && (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )
+    }
 
     {
       site.googleVerification && (
