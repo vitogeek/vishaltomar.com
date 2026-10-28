@@ -1,14 +1,26 @@
 ---
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
 interface Props {
   src: string;
   caption: string;
   width: number;
   height: number;
-  poster?: string;
+  poster?: string | ImageMetadata;
   label?: string;
 }
 
 const { src, caption, width, height, poster, label } = Astro.props;
+
+const POSTER_WIDTH = 768;
+
+const posterSrc =
+  poster === undefined
+    ? undefined
+    : typeof poster === "string"
+      ? poster
+      : (await getImage({ src: poster, width: POSTER_WIDTH })).src;
 const captionId = `case-video-caption-${src
   .replace(/[^a-zA-Z0-9]+/g, "-")
   .replace(/^-|-$/g, "")}`;
@@ -25,7 +37,7 @@ const captionId = `case-video-caption-${src
     playsinline
     preload="none"
     controls
-    poster={poster}
+    poster={posterSrc}
     aria-label={label}
     aria-labelledby={label ? undefined : captionId}
   >

@@ -12,6 +12,8 @@ draft: false
 ---
 
 import conflict from "./version-conflict.png";
+import editPoster from "./edit-prompt-save-new-version-poster.webp";
+import rollbackPoster from "./rollback-to-older-version-poster.webp";
 
 ## The problem
 
@@ -39,7 +41,7 @@ The options were to edit the prompt in place or to keep every version. I chose v
 
 <Video
   src="/case-studies/versioned-ai-prompts/rollback-to-older-version.mp4"
-  poster="/case-studies/versioned-ai-prompts/rollback-to-older-version-poster.webp"
+  poster={rollbackPoster}
   width={1024}
   height={711}
   label={'Rolling back to version 1 adds a new current version noted "Rolled back from version 1"'}
@@ -52,7 +54,7 @@ A prompt edit changes AI output across every project at once. A plain Save butto
 
 <Video
   src="/case-studies/versioned-ai-prompts/edit-prompt-save-new-version.mp4"
-  poster="/case-studies/versioned-ai-prompts/edit-prompt-save-new-version-poster.webp"
+  poster={editPoster}
   width={1024}
   height={711}
   label="Editing a prompt, reviewing the side-by-side changes and the warning, then saving it with a note as a new version"
