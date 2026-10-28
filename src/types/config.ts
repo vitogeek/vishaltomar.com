@@ -50,7 +50,7 @@ interface SocialLink {
 interface AstroPaperConfig {
   site: SiteConfig;
   features?: FeaturesConfig;
-  /** Social profile links shown in the footer. */
+  /** Social profile links shown in the header and the footer. */
   socials?: SocialLink[];
 }
 

@@ -2,6 +2,27 @@
 import config from "@/config";
 import LinkButton from "./LinkButton.astro";
 
+type Props = {
+  size?: "sm" | "md";
+};
+
+const { size = "md" } = Astro.props;
+
+const sizeStyles = {
+  sm: {
+    list: "flex flex-nowrap items-center gap-1",
+    link: "size-8 justify-center",
+    icon: "size-5 fill-transparent stroke-current stroke-2",
+  },
+  md: {
+    list: "flex flex-wrap items-center gap-2",
+    link: "size-12 justify-center",
+    icon: "size-6 fill-transparent stroke-current stroke-2",
+  },
+} as const;
+
+const styles = sizeStyles[size];
+
 const { site, socials } = config;
 
 const icons = import.meta.glob<{
@@ -27,19 +48,16 @@ const items = await Promise.all(
 const links = items.filter(item => item !== null);
 ---
 
-<div class="flex flex-wrap items-center gap-2">
+<div class={styles.list}>
   {
     links.map(({ url, title, Icon }) => (
       <LinkButton
         href={url}
-        class="size-12 justify-center"
+        class={styles.link}
         title={title}
         aria-label={title}
       >
-        <Icon
-          aria-hidden="true"
-          class="size-6 fill-transparent stroke-current stroke-2"
-        />
+        <Icon aria-hidden="true" class={styles.icon} />
       </LinkButton>
     ))
   }
