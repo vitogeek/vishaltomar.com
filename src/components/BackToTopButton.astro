@@ -8,8 +8,6 @@ import { copy } from "@/copy";
   type="button"
   data-visible="false"
   inert
-  tabindex="-1"
-  aria-hidden="true"
   aria-label={copy.a11y.backToTop}
   class="border-border bg-background text-foreground hover:bg-muted pointer-events-none fixed end-[calc(1rem+env(safe-area-inset-right,0px))] bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-30 inline-flex size-12 translate-y-4 items-center justify-center rounded-full border opacity-0 shadow-lg transition duration-300 data-[visible=true]:pointer-events-auto data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100 motion-reduce:translate-none motion-reduce:transition-none"
 >
@@ -18,7 +16,6 @@ import { copy } from "@/copy";
 
 <script>
   let boundButton: HTMLButtonElement | null = null;
-  let scrollToken = 0;
 
   function getButton(): HTMLButtonElement | null {
     const button = document.getElementById("back-to-top");
@@ -29,22 +26,11 @@ import { copy } from "@/copy";
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
-  function supportsScrollEnd(): boolean {
-    return "onscrollend" in window;
-  }
-
   function setShown(button: HTMLButtonElement, shown: boolean): void {
     const state = shown ? "true" : "false";
     if (button.dataset.visible === state) return;
     button.dataset.visible = state;
     button.toggleAttribute("inert", !shown);
-    if (shown) {
-      button.removeAttribute("aria-hidden");
-      button.removeAttribute("tabindex");
-    } else {
-      button.setAttribute("aria-hidden", "true");
-      button.setAttribute("tabindex", "-1");
-    }
   }
 
   function sync(): void {
@@ -60,7 +46,8 @@ import { copy } from "@/copy";
   }
 
   function focusPageTop(): void {
-    const target = document.getElementById("main-content") ?? document.body;
+    const target = document.getElementById("main-content");
+    if (!target) return;
     const addedTabIndex = !target.hasAttribute("tabindex");
     if (addedTabIndex) target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: true });
@@ -77,38 +64,11 @@ import { copy } from "@/copy";
   }
 
   function scrollToTop(): void {
-    const token = ++scrollToken;
-    const finish = (): void => {
-      if (token !== scrollToken) return;
-      focusPageTop();
-    };
-
-    const top = window.scrollY;
     const behavior: ScrollBehavior = prefersReducedMotion()
       ? "instant"
       : "smooth";
     window.scrollTo({ top: 0, left: 0, behavior });
-
-    if (behavior === "instant" || top === 0) {
-      finish();
-      return;
-    }
-
-    if (supportsScrollEnd()) {
-      window.addEventListener("scrollend", finish, { once: true });
-      return;
-    }
-
-    const started = performance.now();
-    const wait = (): void => {
-      if (token !== scrollToken) return;
-      if (window.scrollY === 0 || performance.now() - started > 2000) {
-        finish();
-        return;
-      }
-      window.requestAnimationFrame(wait);
-    };
-    window.requestAnimationFrame(wait);
+    focusPageTop();
   }
 
   function setup(): void {
