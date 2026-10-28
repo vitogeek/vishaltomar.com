@@ -16,7 +16,3 @@ I start by listening to users and stakeholders until we all see the same problem
 ## Beyond the job title
 
 I've worn a lot of hats: coffee shop owner, marketing consultant, photographer, videographer, web developer, tattoo artist and clothing designer. That range is why I can pick up whatever tool an idea needs and explain it to almost any audience.
-
-## Writing
-
-[How to protect against username enumeration on log in, registration, and password reset forms](https://www.controlgap.com/blog/how-to-protect-against-username-enumeration-from-forms), Control Gap blog, July 2022.
