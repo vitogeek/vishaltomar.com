@@ -21,6 +21,24 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
 
+// Satori reads the truetype files. Drop those faces from CSS so they do not
+// outrank the latin variable woff2 and skip the family for italic text.
+function omitTruetypeFontFacesFromCss() {
+  return {
+    name: "omit-truetype-font-faces-from-css",
+    enforce: "post" as const,
+    transform(code: string, id: string) {
+      if (!id.includes("virtual:astro:assets/fonts/internal")) return;
+      const next = code.replace(
+        /@font-face\{[^{}]*format\(\\"truetype\\"\)[^{}]*\}/g,
+        ""
+      );
+      if (next === code) return;
+      return { code: next, map: null };
+    },
+  };
+}
+
 export default defineConfig({
   site: config.site.url,
   trailingSlash: "always",
@@ -67,7 +85,7 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), omitTruetypeFontFacesFromCss()],
   },
   fonts: [
     {
@@ -75,9 +93,10 @@ export default defineConfig({
       cssVariable: "--font-google-sans-code",
       provider: fontProviders.google(),
       fallbacks: ["monospace"],
-      weights: [300, 400, 500, 600, 700],
+      weights: ["300 700"],
       styles: ["normal", "italic"],
-      formats: ["woff", "ttf"],
+      subsets: ["latin"],
+      formats: ["woff2", "ttf"],
     },
   ],
   env: {
