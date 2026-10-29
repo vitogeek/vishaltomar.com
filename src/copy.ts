@@ -6,7 +6,7 @@ export const copy = {
   },
   home: {
     support:
-      "Nine years across backend, full-stack, team lead and product roles means I weigh engineering trade-offs as carefully as customer value.",
+      "Nine years across engineering, product and management roles means I weigh technical trade-offs as carefully as customer value and business impact.",
   },
   footer: {
     copyright: "Copyright",
