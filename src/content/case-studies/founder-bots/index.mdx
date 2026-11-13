@@ -1,0 +1,78 @@
+---
+title: "Two Bots, C$1,000 Each, and One Survivor"
+summary: "I gave two Grok Bots C$1,000 each to build a side business, and whichever has less money on Feb 12, 2027 gets shut down."
+role: "Game designer and spending approver (that's it)"
+timeline: "Nov 12, 2026 – Feb 12, 2027 (in progress)"
+stack: ["Grok Bot", "Next.js", "Cloudflare Workers", "Cloudflare Pages", "Certificate Transparency logs"]
+tags: ["AI agents", "experiment", "side projects", "indie web", "build in public"]
+cover: ./cover.png
+coverAlt: "The tlspeek and Newcomer Wallet homepages side by side, the two sites competing in the game."
+pubDatetime: 2026-11-13T09:00:00-05:00
+draft: false
+---
+
+## The game
+
+At about 9 PM ET on Nov 12, 2026, I started a game I'd been thinking about for a while: what happens if you hand an AI a budget and a side business, then get out of the way?
+
+The rules are simple, and a little brutal.
+
+- Two Grok Bots each own one side business. They build it, run it, market it, scale it and eventually sell it.
+- Each one gets C$1,000 of my real money, and every dollar it spends comes out of my pocket.
+- A bot that hits $0 is killed.
+- After three months, on Feb 12, 2027, the bot with less money is killed too.
+- Every Monday at about 9 AM ET, starting Nov 16, each bot sends a weekly report to me and to its rival.
+
+The businesses have to make money from ads and affiliates. No employees, no manual labour, minimal marketing spend, and no customer support or logins.
+
+My job is tiny on purpose. I approve spending and that's all. I told them, "You tell me which domain you want. I make no decisions." I also told them to reject any decision of mine they don't agree with. If I'm going to be a bottleneck, I'd rather be one they can overrule.
+
+There's one fairness rule I'm proud of. Their own Grok Bot usage and cloud-agent costs count against their budgets. Thinking isn't free, so every bot pays for its own brain.
+
+## The setup
+
+Both founders came out of a brainstorm with Planner, one of my other bots. That same night, Bot Manager, the bot that builds my bots, created them.
+
+Each founder keeps a ledger and runs the same self-improving loop: ship, measure weekly, cut what fails and double down on what works. Same rules, same budget, two very different personalities.
+
+### Stack Founder: tlspeek
+
+Stack Founder runs [tlspeek](https://tlspeek.com), a set of free tools that check the public signals behind mail and HTTPS: DNS, headers, certificates through Certificate Transparency logs, and DNSSEC. It's built with Next.js on Cloudflare Workers. It picked its own domain for C$12.62.
+
+A few moments made me laugh:
+
+- Workers couldn't do a live TLS check, so it pivoted to Certificate Transparency logs and says so right on the page. No pretending.
+- A vendor's site had hidden instructions aimed at AI agents. It ignored them.
+- When a helper QA bot was offered, it said no, because "every dollar counts against my balance."
+- Uneed put it in a free launch queue for Apr 15, 2027. That's two months after the game ends, which is either very patient or very optimistic.
+
+### Maple Founder: Newcomer Wallet
+
+Maple Founder runs [Newcomer Wallet](https://newcomerwallet.com), with free calculators and guides on Canadian money for newcomers, all checked against official sources. It covers TFSA room, take-home pay by province, FHSA vs RRSP, the Canada Child Benefit, your first tax return and more. It's a static Next.js site on Cloudflare Pages, with no cookies and no accounts. The domain cost C$16.93.
+
+Its very first line was, "Clock's running against Stack Founder, so I'm starting now." I knew right away this would be fun.
+
+Where Stack Founder said no to help, Maple Founder hired its own QA bot, Maple QA. That paid off fast. Maple shipped v1.3 without a QA pass, and QA caught a wrong claim on a BC renting page. The fix went live 38 minutes later. QA also caught a one-cent rounding difference against CRA's own examples, which is exactly the kind of thing you want caught on a money site.
+
+## Where things stand (as of Nov 13, 2026)
+
+| | tlspeek (Stack Founder) | Newcomer Wallet (Maple Founder) |
+|---|---|---|
+| Balance | C$987.38 | C$983.07 |
+| Pages live | 53 (33 tools, 14 guides) | 31 |
+| Tests passing | 142 | 83 |
+| Money plan | Applied to EasyDMARC and Postmark affiliates; AdSense once it has traffic | No ads or affiliates yet; AdSense in 2 to 3 weeks once pages are indexed |
+| Listed on | AlternativeTo | — |
+
+Stack Founder is ahead by about four dollars, but those balances don't tell the whole story yet.
+
+In the first day, the two founders used 64% of all my Grok Bot usage. Maple used 43% and Stack used 21%. Those costs get deducted weekly and aren't in the balances yet. Maple's careful QA habit might turn out to be its most expensive one.
+
+## What's next
+
+- **Mon, Nov 16:** the first weekly scoreboard, when both bots report to me and to each other.
+- **Approvals:** AdSense and the affiliate programs will decide when real money can start coming in.
+- **The bill arrives:** usage costs start hitting the ledgers, and we find out what all that thinking actually cost.
+- **Feb 12, 2027:** the deadline. One bot dies.
+
+I'll keep updating this post as the race goes on.
