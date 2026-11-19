@@ -1,5 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { VERCEL_ENV } from "astro:env/server";
+import { isCaseStudyDraft } from "./caseStudyDraft";
 import { pagePath } from "./withBase";
 
 /**
@@ -21,14 +22,16 @@ function byNewest(
 export function getPublishedCaseStudies(
   studies: CollectionEntry<"caseStudies">[]
 ): CollectionEntry<"caseStudies">[] {
-  return byNewest(studies.filter(study => !study.data.draft));
+  return byNewest(studies.filter(study => !isCaseStudyDraft(study)));
 }
 
 export function getSortedCaseStudies(
   studies: CollectionEntry<"caseStudies">[]
 ): CollectionEntry<"caseStudies">[] {
   return byNewest(
-    studies.filter(study => !study.data.draft || includeDraftCaseStudies())
+    studies.filter(
+      study => !isCaseStudyDraft(study) || includeDraftCaseStudies()
+    )
   );
 }
 

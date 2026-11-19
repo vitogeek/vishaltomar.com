@@ -12,6 +12,12 @@ import config from "@/config";
 
 const studies = await getCollection("caseStudies");
 const sortedStudies = getSortedCaseStudies(studies);
+const caseStudyList = sortedStudies.filter(
+  study => study.data.type === "case-study"
+);
+const impactReports = sortedStudies.filter(
+  study => study.data.type === "impact-report"
+);
 ---
 
 <Layout
@@ -28,14 +34,31 @@ const sortedStudies = getSortedCaseStudies(studies);
     visuallyHiddenTitle
   >
     {
-      sortedStudies.length === 0 ? (
+      caseStudyList.length === 0 ? (
         <p>{copy.pages.caseStudiesEmpty}</p>
       ) : (
         <ul>
-          {sortedStudies.map(study => (
+          {caseStudyList.map(study => (
             <Card {...study} />
           ))}
         </ul>
+      )
+    }
+    {
+      impactReports.length > 0 && (
+        <section class="mt-16" aria-labelledby="impact-reports-heading">
+          <h2
+            id="impact-reports-heading"
+            class="text-2xl font-semibold wrap-break-word sm:text-3xl"
+          >
+            {copy.pages.impactReportsTitle}
+          </h2>
+          <ul>
+            {impactReports.map(study => (
+              <Card {...study} />
+            ))}
+          </ul>
+        </section>
       )
     }
   </Main>

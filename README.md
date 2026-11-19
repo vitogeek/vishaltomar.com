@@ -21,6 +21,7 @@ pnpm dev
 | `pnpm lint`         | `eslint .`           |
 | `pnpm format`       | `prettier --write .` |
 | `pnpm format:check` | `prettier --check .` |
+| `pnpm test`         | `vitest run`         |
 
 `pnpm check` is the type check.
 
@@ -30,24 +31,29 @@ Add `src/content/case-studies/<slug>/index.mdx`. The `caseStudies` collection in
 
 ### Front matter
 
-| Field         | Type                    | Required            |
-| ------------- | ----------------------- | ------------------- |
-| `title`       | string                  | yes                 |
-| `summary`     | string                  | yes                 |
-| `role`        | string                  | yes                 |
-| `timeline`    | string                  | yes                 |
-| `stack`       | string[]                | yes                 |
-| `tags`        | string[]                | yes                 |
-| `cover`       | local image (`image()`) | yes                 |
-| `coverAlt`    | string                  | yes                 |
-| `draft`       | boolean                 | no, default `false` |
-| `pubDatetime` | date                    | yes                 |
+| Field         | Type                                | Required                   |
+| ------------- | ----------------------------------- | -------------------------- |
+| `title`       | string                              | yes                        |
+| `summary`     | string                              | yes                        |
+| `role`        | string                              | yes                        |
+| `timeline`    | string                              | yes                        |
+| `stack`       | string[]                            | yes                        |
+| `tags`        | string[]                            | yes                        |
+| `cover`       | local image (`image()`)             | yes                        |
+| `coverAlt`    | string                              | yes                        |
+| `type`        | `"case-study"` or `"impact-report"` | no, default `"case-study"` |
+| `draft`       | boolean                             | no, default `false`        |
+| `pubDatetime` | date                                | yes                        |
 
 `cover` is a path relative to the MDX file, such as `./cover.png`. `pubDatetime` is a YAML date.
 
 ### Draft behaviour
 
 A study with `draft: true` is omitted when `VERCEL_ENV` is `production` (`src/utils/caseStudies.ts`). Dev, `pnpm preview`, CI, and Vercel preview include drafts. The RSS feed excludes drafts in every build.
+
+Any entry whose body contains `[PLACEHOLDER:` is treated as a draft, whatever the front matter says. The listing, detail routes, sitemap, RSS feed, and OG images all use that one check.
+
+On `/case-studies/`, `case-study` entries stay in the case studies list. `impact-report` entries are listed under Impact reports, newest first. That section is omitted when there are no reports.
 
 ### `Figure`, `Video`, and `Callout`
 
@@ -100,6 +106,8 @@ import shot from "./shot.png";
 - Metric: `kind="metric"`, `value` (string, required), `label` (string, required).
 - Quote: `kind="quote"`, `quote` (string, required), `attribution` (string, optional).
 
+Blockquote markers in the upload format render with this same markup. A page can include any number of them.
+
 ```mdx
 <Callout kind="metric" value="12" label="What the number means" />
 
@@ -120,11 +128,20 @@ One zip per study, named `case-study-<kebab-slug>.zip`. Uploading that same name
 <slug>/visuals/
 ```
 
+`cover.png` is 1600×900 and under 300 KB.
+
 In that source:
 
-- An image followed by a `*Caption: ...*` line becomes a `Figure` or a `Video`.
-- A `> [!QUOTE]` block becomes a quote `Callout`.
+- Do not use an H1. The title comes from front matter.
+- Use Canadian spelling, and do not invent facts.
+- Maximum 1,800 words. There is no minimum.
+- A case study uses these H2s, in this order: The problem, Constraints, Decisions and trade-offs, Result, How I used AI to build it, What's next. The section on AI comes after Result.
+- An impact report (`type: impact-report`) may use any H2s.
+- An image followed by a `*Caption: ...*` line becomes a figure or a video. Several figures in a row are supported, as are Markdown tables.
 - GIFs become muted, looping MP4s with a poster.
+- A `> [!QUOTE] text` block becomes a quote callout. A page can include any number of callouts.
+- A `> [!METRIC] value | label` block becomes a metric callout. Consecutive metric callouts render as one row. A metric marker with no `|` stays an ordinary blockquote.
+- Any `[PLACEHOLDER: ...]` in the body forces the entry to be a draft.
 
 ## CI
 
@@ -135,6 +152,7 @@ In that source:
 - `pnpm exec astro check`
 - `pnpm run lint`
 - `pnpm run format:check` (Prettier)
+- `pnpm test`
 - `pnpm run build`
 
 **Lighthouse** (`lighthouse`)
