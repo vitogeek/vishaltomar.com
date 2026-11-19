@@ -13,6 +13,9 @@ import remarkCollapse from "remark-collapse";
 import rehypeCallouts from "rehype-callouts";
 import rehypeExternalLinks from "rehype-external-links";
 import { OPENS_IN_NEW_TAB } from "./src/utils/externalHref";
+import { rehypeContentFigures } from "./src/utils/rehypeContentFigures";
+import { rehypeTableScroll } from "./src/utils/rehypeTableScroll";
+import { remarkCallouts } from "./src/utils/remarkCallouts";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
@@ -38,10 +41,13 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [
+        remarkCallouts,
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
       ],
       rehypePlugins: [
+        rehypeContentFigures,
+        rehypeTableScroll,
         rehypeCallouts,
         [
           rehypeExternalLinks,

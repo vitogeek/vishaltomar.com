@@ -1,25 +1,14 @@
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";
+import { caseStudySchema } from "./content/caseStudySchema";
 
 const caseStudies = defineCollection({
   loader: glob({
     pattern: "**/[^_]*.{md,mdx}",
     base: "./src/content/case-studies",
   }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      summary: z.string(),
-      role: z.string(),
-      timeline: z.string(),
-      stack: z.array(z.string()),
-      tags: z.array(z.string()),
-      cover: image(),
-      coverAlt: z.string(),
-      draft: z.boolean().default(false),
-      pubDatetime: z.date(),
-    }),
+  schema: ({ image }) => caseStudySchema(image),
 });
 
 const pages = defineCollection({

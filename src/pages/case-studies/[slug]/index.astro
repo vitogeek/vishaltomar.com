@@ -44,7 +44,10 @@ const ogImage = config.features.dynamicOgImage
 
   <Breadcrumb />
 
-  <main id="main-content" class="mx-auto w-full max-w-[72ch] px-4 pt-2 pb-16">
+  <main
+    id="main-content"
+    class="mx-auto w-full max-w-[72ch] min-w-0 px-4 pt-2 pb-16"
+  >
     <article>
       <header>
         <h1
@@ -107,7 +110,7 @@ const ogImage = config.features.dynamicOgImage
         fetchpriority="high"
       />
 
-      <div class="app-prose mt-8">
+      <div class="app-prose mt-8 min-w-0">
         <Content components={{ Figure, Video, Callout }} />
       </div>
     </article>

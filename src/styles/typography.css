@@ -47,6 +47,26 @@
       @apply border-border mx-auto border;
     }
 
+    .case-figure {
+      @apply my-8;
+    }
+
+    .case-figure img {
+      @apply my-0 block h-auto w-auto max-w-full;
+    }
+
+    .case-figure figcaption {
+      @apply text-foreground mt-2 mb-0 text-sm leading-snug;
+    }
+
+    .case-table-scroll {
+      @apply my-8 max-w-full min-w-0 overflow-x-auto;
+    }
+
+    .case-table-scroll:focus-visible {
+      @apply outline-accent outline-2 outline-offset-2 outline-dashed;
+    }
+
     img[role="button"] {
       @apply cursor-zoom-in;
 
@@ -60,13 +80,15 @@
     }
 
     table {
+      @apply w-full border-collapse;
+
       th,
       td {
-        @apply border-border border p-2;
+        @apply border-border border px-3 py-2 align-top;
       }
 
       th {
-        @apply py-1.5;
+        @apply bg-muted font-semibold;
       }
 
       th[align="center"],
@@ -83,6 +105,10 @@
       td[align="left"] {
         text-align: left;
       }
+    }
+
+    .case-table-scroll table {
+      @apply my-0;
     }
 
     code {
