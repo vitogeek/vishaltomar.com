@@ -45,7 +45,7 @@ function captionFrom(node: HastNode): string | null {
 
 function withImageClasses(image: HastNode): HastNode {
   const current = image.properties?.className;
-  const className = [
+  const names = [
     ...(Array.isArray(current)
       ? current
       : typeof current === "string"
@@ -59,7 +59,9 @@ function withImageClasses(image: HastNode): HastNode {
     ...image,
     properties: {
       ...image.properties,
-      className,
+      // A string, not an array: MDX copies img properties with String(), which
+      // would join an array with commas and produce one invalid class.
+      className: names.join(" "),
       // One candidate at the file's own width, so the markup does not emit an empty srcset.
       densities: image.properties?.densities ?? [1],
     },

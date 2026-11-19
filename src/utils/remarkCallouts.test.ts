@@ -1,30 +1,38 @@
-import { parse } from "node-html-parser";
+import { compile } from "@mdx-js/mdx";
+import remarkGfm from "remark-gfm";
 import { describe, expect, it } from "vitest";
-import { transformCalloutRoot } from "./remarkCallouts";
+import { rehypeContentFigures } from "./rehypeContentFigures";
+import { rehypeTableScroll } from "./rehypeTableScroll";
+import { remarkCallouts, transformCalloutRoot } from "./remarkCallouts";
 
 interface Node {
   type: string;
   value?: string;
+  url?: string;
   children?: Node[];
-}
-
-function blockquote(text: string): Node {
-  return {
-    type: "blockquote",
-    children: [
-      {
-        type: "paragraph",
-        children: [{ type: "text", value: text }],
-      },
-    ],
+  data?: {
+    hName?: string;
+    hProperties?: { className?: string[] };
   };
 }
 
-function paragraph(text: string): Node {
-  return {
-    type: "paragraph",
-    children: [{ type: "text", value: text }],
-  };
+function text(node: Node | undefined): string {
+  if (!node) return "";
+  if (node.type === "text" || node.type === "inlineCode")
+    return node.value ?? "";
+  return (node.children ?? []).map(text).join("");
+}
+
+function classes(node: Node | undefined): string {
+  return node?.data?.hProperties?.className?.join(" ") ?? "";
+}
+
+function blockquote(children: Node[]): Node {
+  return { type: "blockquote", children };
+}
+
+function paragraph(children: Node[]): Node {
+  return { type: "paragraph", children };
 }
 
 function transform(children: Node[]): Node[] {
@@ -33,119 +41,188 @@ function transform(children: Node[]): Node[] {
   return tree.children ?? [];
 }
 
-function htmlOf(node: Node | undefined): string {
-  expect(node?.type).toBe("html");
-  return node?.value ?? "";
-}
-
 describe("quote callouts", () => {
   it("parses a quote marker into the quote callout", () => {
-    const [node] = transform([blockquote("[!QUOTE] Hello there.")]);
-    const html = htmlOf(node);
-    expect(html).toContain("Hello there.");
-    expect(html).toContain("border-s-4");
-    expect(html).toContain("before:content-['“']");
-    expect(html).not.toContain("[!QUOTE]");
+    const [node] = transform([
+      blockquote([
+        paragraph([{ type: "text", value: "[!QUOTE] Hello there." }]),
+      ]),
+    ]);
+    expect(node?.data?.hName).toBe("figure");
+    expect(classes(node)).toContain("border-s-4");
+    expect(text(node)).toBe("Hello there.");
+    expect(text(node)).not.toContain("[!QUOTE]");
+  });
+
+  it("keeps inline markdown inside the quote", () => {
+    const [node] = transform([
+      blockquote([
+        paragraph([
+          { type: "text", value: "[!QUOTE] See " },
+          { type: "strong", children: [{ type: "text", value: "bold" }] },
+          { type: "text", value: " and " },
+          { type: "inlineCode", value: "code" },
+        ]),
+      ]),
+    ]);
+    const quote = node?.children?.[0]?.children?.[0];
+    expect(quote?.children?.map(child => child.type)).toEqual([
+      "text",
+      "strong",
+      "text",
+      "inlineCode",
+    ]);
+    expect(text(quote)).toBe("See bold and code");
   });
 
   it("parses an em dash line as attribution and keeps wrapped quote text", () => {
     const [node] = transform([
-      blockquote("[!QUOTE] Line one\nkeeps going\n— Ada Lovelace"),
+      blockquote([
+        paragraph([
+          {
+            type: "text",
+            value: "[!QUOTE] Line one\nkeeps going\n— Ada Lovelace",
+          },
+        ]),
+      ]),
     ]);
-    const html = htmlOf(node);
-    expect(html).toContain("Line one keeps going");
-    expect(html).toContain("— Ada Lovelace");
+    expect(text(node?.children?.[0])).toBe("Line one keeps going");
+    expect(node?.children?.[1]?.data?.hName).toBe("figcaption");
+    expect(text(node?.children?.[1])).toBe("— Ada Lovelace");
   });
 
-  it("escapes quote text", () => {
-    const [node] = transform([blockquote("[!QUOTE] 1 < 2 & 3")]);
-    const html = htmlOf(node);
-    expect(html).toContain("1 &lt; 2 &amp; 3");
-    expect(html).not.toContain("1 < 2");
+  it("keeps characters that the HTML renderer must escape", () => {
+    const [node] = transform([
+      blockquote([paragraph([{ type: "text", value: "[!QUOTE] 1 < 2 & 3" }])]),
+    ]);
+    expect(text(node)).toBe("1 < 2 & 3");
+    expect(node?.type).not.toBe("html");
   });
 });
 
 describe("metric callouts", () => {
   it("parses a value and a label on the first pipe", () => {
-    const [node] = transform([blockquote("[!METRIC] 48% | share | extra")]);
-    const html = htmlOf(node);
-    const root = parse(html);
-    expect(root.querySelector("div")?.getAttribute("class")).not.toContain(
-      "sm:flex-row"
-    );
-    expect(root.querySelectorAll("p").map(item => item.text)).toEqual([
-      "48%",
-      "share | extra",
+    const [node] = transform([
+      blockquote([
+        paragraph([{ type: "text", value: "[!METRIC] 48% | share | extra" }]),
+      ]),
     ]);
-    expect(html).toContain("text-4xl");
-    expect(html).toContain("border-s-4");
+    expect(node?.data?.hName).toBe("div");
+    expect(classes(node)).toContain("border-s-4");
+    expect(classes(node)).not.toContain("sm:flex-row");
+    expect(text(node?.children?.[0])).toBe("48%");
+    expect(text(node?.children?.[1])).toBe("share | extra");
+  });
+
+  it("keeps inline markdown in a metric value and label", () => {
+    const [node] = transform([
+      blockquote([
+        paragraph([
+          { type: "text", value: "[!METRIC] " },
+          { type: "strong", children: [{ type: "text", value: "12" }] },
+          { type: "text", value: " | labelled " },
+          { type: "inlineCode", value: "test" },
+        ]),
+      ]),
+    ]);
+    expect(node?.children?.[0]?.children?.[0]?.type).toBe("strong");
+    expect(node?.children?.[1]?.children?.[1]?.type).toBe("inlineCode");
   });
 
   it("groups consecutive metrics and leaves separated metrics alone", () => {
     const nodes = transform([
-      blockquote("[!METRIC] 1 | one"),
-      blockquote("[!METRIC] 2 | two"),
-      blockquote("[!METRIC] 3 | three"),
-      paragraph("Between the groups."),
-      blockquote("[!METRIC] 4 | four"),
-      blockquote("[!METRIC] 5 | five"),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] 1 | one" }])]),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] 2 | two" }])]),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] 3 | three" }])]),
+      paragraph([{ type: "text", value: "Between the groups." }]),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] 4 | four" }])]),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] 5 | five" }])]),
     ]);
 
     expect(nodes).toHaveLength(3);
     expect(nodes[1]?.type).toBe("paragraph");
-
-    const grouped = parse(htmlOf(nodes[0]));
-    expect(grouped.querySelector("div")?.getAttribute("class")).toContain(
-      "sm:flex-row"
-    );
-    expect(grouped.querySelectorAll("p").map(item => item.text)).toEqual([
-      "1",
-      "one",
-      "2",
-      "two",
-      "3",
-      "three",
-    ]);
-
-    const separated = parse(htmlOf(nodes[2]));
-    expect(separated.querySelector("div")?.getAttribute("class")).toContain(
-      "sm:flex-row"
-    );
-    expect(separated.querySelectorAll("p").map(item => item.text)).toEqual([
-      "4",
-      "four",
-      "5",
-      "five",
-    ]);
+    expect(classes(nodes[0])).toContain("sm:flex-row");
+    expect(nodes[0]?.children).toHaveLength(3);
+    expect(nodes[0]?.children?.map(text)).toEqual(["1one", "2two", "3three"]);
+    expect(classes(nodes[2])).toContain("sm:flex-row");
+    expect(nodes[2]?.children).toHaveLength(2);
   });
 
   it("does not group metrics that are split by another block", () => {
     const nodes = transform([
-      blockquote("[!METRIC] 1 | one"),
-      blockquote("[!QUOTE] A quote between metrics."),
-      blockquote("[!METRIC] 2 | two"),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] 1 | one" }])]),
+      blockquote([
+        paragraph([
+          { type: "text", value: "[!QUOTE] A quote between metrics." },
+        ]),
+      ]),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] 2 | two" }])]),
     ]);
 
     expect(nodes).toHaveLength(3);
-    expect(htmlOf(nodes[0])).not.toContain("sm:flex-row");
-    expect(htmlOf(nodes[1])).toContain("A quote between metrics.");
-    expect(htmlOf(nodes[2])).not.toContain("sm:flex-row");
+    expect(classes(nodes[0])).not.toContain("sm:flex-row");
+    expect(nodes[1]?.data?.hName).toBe("figure");
+    expect(text(nodes[1])).toBe("A quote between metrics.");
+    expect(classes(nodes[2])).not.toContain("sm:flex-row");
   });
 });
 
 describe("malformed markers", () => {
   it("leaves a metric without a pipe as a blockquote", () => {
-    const [node] = transform([blockquote("[!METRIC] 12 projects")]);
+    const [node] = transform([
+      blockquote([
+        paragraph([{ type: "text", value: "[!METRIC] 12 projects" }]),
+      ]),
+    ]);
     expect(node?.type).toBe("blockquote");
+    expect(node?.data?.hName).toBeUndefined();
   });
 
   it("leaves an empty value or label as a blockquote", () => {
     const nodes = transform([
-      blockquote("[!METRIC] | label"),
-      blockquote("[!METRIC] value |"),
-      blockquote("[!QUOTE]"),
-      blockquote("An ordinary blockquote."),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] | label" }])]),
+      blockquote([paragraph([{ type: "text", value: "[!METRIC] value |" }])]),
+      blockquote([paragraph([{ type: "text", value: "[!QUOTE]" }])]),
+      blockquote([
+        paragraph([{ type: "text", value: "An ordinary blockquote." }]),
+      ]),
     ]);
-    expect(nodes.every(node => node.type === "blockquote")).toBe(true);
+    expect(
+      nodes.every(node => node.type === "blockquote" && !node.data?.hName)
+    ).toBe(true);
+  });
+});
+
+describe("MDX pipeline", () => {
+  it("compiles callouts, a table wrapper, and a figure through MDX", async () => {
+    const file = await compile(
+      [
+        "> [!QUOTE] See **bold** and `code`",
+        "",
+        "> [!METRIC] 1 | one",
+        "",
+        "> [!METRIC] 2 | two",
+        "",
+        "| A | B |",
+        "| - | - |",
+        "| 1 | 2 |",
+        "",
+        "![Chart](chart.png)",
+        "*Caption: Example chart.*",
+      ].join("\n"),
+      {
+        remarkPlugins: [remarkGfm, remarkCallouts],
+        rehypePlugins: [rehypeContentFigures, rehypeTableScroll],
+      }
+    );
+    const code = String(file);
+    expect(code).toContain("border-s-4");
+    expect(code).toContain("sm:flex-row");
+    expect(code).toContain("case-table-scroll");
+    expect(code).toContain("case-figure");
+    expect(code).toContain("bold");
+    expect(code).toContain("Example chart.");
+    expect(code).not.toContain("[!QUOTE]");
+    expect(code).not.toContain("[!METRIC]");
   });
 });

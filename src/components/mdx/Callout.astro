@@ -1,9 +1,34 @@
 ---
-import { renderCallout, type CalloutModel } from "@/utils/calloutMarkup";
+import {
+  calloutClass,
+  metricLabelClass,
+  metricValueClass,
+  quoteAttributionClass,
+  quoteTextClass,
+  type CalloutModel,
+} from "@/utils/calloutMarkup";
 
 type Props = CalloutModel;
 
-const html = renderCallout(Astro.props);
+const props = Astro.props;
 ---
 
-<Fragment set:html={html} />
+{
+  props.kind === "metric" ? (
+    <div class={calloutClass}>
+      <p class={metricValueClass}>{props.value}</p>
+      <p class={metricLabelClass}>{props.label}</p>
+    </div>
+  ) : (
+    <figure class={calloutClass}>
+      <blockquote>
+        <p class={quoteTextClass}>{props.quote}</p>
+      </blockquote>
+      {props.attribution && (
+        <figcaption class={quoteAttributionClass}>
+          — {props.attribution}
+        </figcaption>
+      )}
+    </figure>
+  )
+}

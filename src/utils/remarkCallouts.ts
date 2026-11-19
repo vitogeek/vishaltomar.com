@@ -1,76 +1,248 @@
 import {
-  renderMetricCallout,
-  renderMetricRow,
-  renderQuoteCallout,
-  type MetricCallout,
-  type QuoteCallout,
+  calloutClass,
+  calloutClassNames,
+  metricLabelClass,
+  metricRowCardClass,
+  metricRowClass,
+  metricValueClass,
+  quoteAttributionClass,
+  quoteTextClass,
 } from "./calloutMarkup";
+
+interface MarkdownData {
+  hName?: string;
+  hProperties?: {
+    className?: string[];
+  };
+}
 
 interface MarkdownNode {
   type: string;
   value?: string;
   children?: MarkdownNode[];
+  data?: MarkdownData;
 }
 
-type ParsedCallout = MetricCallout | QuoteCallout;
+const quoteMarker = /^\[!QUOTE\]\s+/;
+const metricMarker = /^\[!METRIC\]\s+/;
+const attributionMarker = /^[—–]\s+/;
 
-const quoteMarker = /^\[!QUOTE\]\s+(\S[\s\S]*)$/;
-const metricMarker = /^\[!METRIC\]\s+([\s\S]+)$/;
-const attributionMarker = /^[—–]\s+(\S[\s\S]*)$/;
-
-function inlineText(node: MarkdownNode): string {
-  if (node.type === "text") return node.value ?? "";
-  if (node.type === "break") return "\n";
-  return (node.children ?? []).map(inlineText).join("");
-}
-
-function blockquoteLines(node: MarkdownNode): string[] {
-  const lines: string[] = [];
-  for (const child of node.children ?? []) {
-    if (child.type !== "paragraph") continue;
-    lines.push(...inlineText(child).split("\n"));
+function splitLines(children: MarkdownNode[]): MarkdownNode[][] {
+  const lines: MarkdownNode[][] = [[]];
+  const push = (node: MarkdownNode) => {
+    lines[lines.length - 1]?.push(node);
+  };
+  for (const child of children) {
+    if (child.type === "break") {
+      lines.push([]);
+      continue;
+    }
+    if (child.type !== "text") {
+      push(child);
+      continue;
+    }
+    const parts = (child.value ?? "").split("\n");
+    parts.forEach((part, index) => {
+      if (index > 0) lines.push([]);
+      if (part !== "") push({ ...child, value: part });
+    });
   }
   return lines;
 }
 
-function parseMetric(line: string): MetricCallout | null {
-  const match = metricMarker.exec(line.trim());
-  if (!match) return null;
-  const pipe = match[1].indexOf("|");
-  if (pipe === -1) return null;
-  const value = match[1].slice(0, pipe).trim();
-  const label = match[1].slice(pipe + 1).trim();
-  if (value === "" || label === "") return null;
-  return { kind: "metric", value, label };
+function blockLines(node: MarkdownNode): MarkdownNode[][] {
+  const lines: MarkdownNode[][] = [];
+  for (const child of node.children ?? []) {
+    if (child.type !== "paragraph") continue;
+    lines.push(...splitLines(child.children ?? []));
+  }
+  return lines.filter(line => inlineText(line).trim() !== "");
 }
 
-function parseQuote(lines: string[]): QuoteCallout | null {
-  const first = lines[0]?.trim() ?? "";
-  const match = quoteMarker.exec(first);
-  if (!match) return null;
-  const quoteParts = [match[1].trim()];
-  let attribution: string | undefined;
-  for (const line of lines.slice(1)) {
-    const trimmed = line.trim();
-    if (trimmed === "") continue;
-    const attributionMatch = attributionMarker.exec(trimmed);
-    if (attributionMatch) {
-      attribution = attributionMatch[1].trim();
+function inlineText(nodes: MarkdownNode[]): string {
+  return nodes
+    .map(node => {
+      if (node.type === "text" || node.type === "inlineCode") {
+        return node.value ?? "";
+      }
+      return inlineText(node.children ?? []);
+    })
+    .join("");
+}
+
+function trimInlineEdges(nodes: MarkdownNode[]): MarkdownNode[] {
+  const copy = [...nodes];
+  while (copy.length > 0 && copy[0]?.type === "text") {
+    const value = copy[0].value?.replace(/^\s+/, "") ?? "";
+    if (value === "") {
+      copy.shift();
       continue;
     }
-    quoteParts.push(trimmed);
+    copy[0] = { ...copy[0], value };
+    break;
   }
-  return { kind: "quote", quote: quoteParts.join(" "), attribution };
+  while (copy.length > 0) {
+    const last = copy[copy.length - 1];
+    if (last?.type !== "text") break;
+    const value = last.value?.replace(/\s+$/, "") ?? "";
+    if (value === "") {
+      copy.pop();
+      continue;
+    }
+    copy[copy.length - 1] = { ...last, value };
+    break;
+  }
+  return copy;
 }
 
-function parseBlockquote(node: MarkdownNode): ParsedCallout | null {
-  const lines = blockquoteLines(node);
-  if (lines.length === 0) return null;
-  return parseMetric(lines[0] ?? "") ?? parseQuote(lines);
+function stripPrefix(
+  nodes: MarkdownNode[],
+  pattern: RegExp
+): MarkdownNode[] | null {
+  const [first, ...rest] = nodes;
+  if (first?.type !== "text" || first.value === undefined) return null;
+  const match = pattern.exec(first.value);
+  if (!match) return null;
+  const value = first.value.slice(match[0].length);
+  const next = value === "" ? rest : [{ ...first, value }, ...rest];
+  return trimInlineEdges(next);
 }
 
-function htmlNode(value: string): MarkdownNode {
-  return { type: "html", value };
+function splitOnPipe(
+  nodes: MarkdownNode[]
+): { value: MarkdownNode[]; label: MarkdownNode[] } | null {
+  const value: MarkdownNode[] = [];
+  for (let index = 0; index < nodes.length; index += 1) {
+    const node = nodes[index];
+    if (!node) continue;
+    if (node.type !== "text" || !node.value?.includes("|")) {
+      value.push(node);
+      continue;
+    }
+    const pipe = node.value.indexOf("|");
+    const before = node.value.slice(0, pipe);
+    const after = node.value.slice(pipe + 1);
+    if (before !== "") value.push({ ...node, value: before });
+    const label = [
+      ...(after === "" ? [] : [{ ...node, value: after }]),
+      ...nodes.slice(index + 1),
+    ];
+    return {
+      value: trimInlineEdges(value),
+      label: trimInlineEdges(label),
+    };
+  }
+  return null;
+}
+
+function element(
+  type: string,
+  hName: string,
+  className: string,
+  children: MarkdownNode[]
+): MarkdownNode {
+  return {
+    type,
+    data: {
+      hName,
+      hProperties: { className: calloutClassNames(className) },
+    },
+    children,
+  };
+}
+
+function paragraph(className: string, children: MarkdownNode[]): MarkdownNode {
+  return element("paragraph", "p", className, children);
+}
+
+function metricCard(
+  value: MarkdownNode[],
+  label: MarkdownNode[],
+  className: string
+): MarkdownNode {
+  return element("blockquote", "div", className, [
+    paragraph(metricValueClass, value),
+    paragraph(metricLabelClass, label),
+  ]);
+}
+
+function quoteFigure(
+  quote: MarkdownNode[],
+  attribution: MarkdownNode[] | undefined
+): MarkdownNode {
+  const children: MarkdownNode[] = [
+    {
+      type: "blockquote",
+      children: [paragraph(quoteTextClass, quote)],
+    },
+  ];
+  if (attribution && attribution.length > 0) {
+    children.push(
+      element("paragraph", "figcaption", quoteAttributionClass, [
+        { type: "text", value: "— " },
+        ...attribution,
+      ])
+    );
+  }
+  return element("blockquote", "figure", calloutClass, children);
+}
+
+function joinLines(lines: MarkdownNode[][]): MarkdownNode[] {
+  const children: MarkdownNode[] = [];
+  for (const line of lines) {
+    const trimmed = trimInlineEdges(line);
+    if (trimmed.length === 0) continue;
+    if (children.length > 0) children.push({ type: "text", value: " " });
+    children.push(...trimmed);
+  }
+  return children;
+}
+
+function matchMetric(
+  line: MarkdownNode[]
+): { value: MarkdownNode[]; label: MarkdownNode[] } | null {
+  const body = stripPrefix(line, metricMarker);
+  if (!body) return null;
+  const parts = splitOnPipe(body);
+  if (!parts || parts.value.length === 0 || parts.label.length === 0) {
+    return null;
+  }
+  return parts;
+}
+
+function matchQuote(lines: MarkdownNode[][]): {
+  quote: MarkdownNode[];
+  attribution?: MarkdownNode[];
+} | null {
+  const [first, ...rest] = lines;
+  if (!first) return null;
+  const opening = stripPrefix(first, quoteMarker);
+  if (!opening || opening.length === 0) return null;
+  const quoteLines: MarkdownNode[][] = [opening];
+  let attribution: MarkdownNode[] | undefined;
+  for (const line of rest) {
+    const credit = stripPrefix(line, attributionMarker);
+    if (credit && credit.length > 0) {
+      attribution = credit;
+      continue;
+    }
+    quoteLines.push(line);
+  }
+  return { quote: joinLines(quoteLines), attribution };
+}
+
+function calloutNode(node: MarkdownNode): MarkdownNode | null {
+  const lines = blockLines(node);
+  const first = lines[0];
+  if (!first) return null;
+  if (stripPrefix(first, metricMarker)) {
+    const metric = matchMetric(first);
+    if (!metric) return null;
+    return metricCard(metric.value, metric.label, calloutClass);
+  }
+  const quote = matchQuote(lines);
+  if (!quote) return null;
+  return quoteFigure(quote.quote, quote.attribution);
 }
 
 function mapChildren(children: MarkdownNode[]): MarkdownNode[] {
@@ -79,30 +251,39 @@ function mapChildren(children: MarkdownNode[]): MarkdownNode[] {
     const node = children[index];
     if (!node) continue;
     if (node.type === "blockquote") {
-      const parsed = parseBlockquote(node);
-      if (parsed?.kind === "metric") {
-        const metrics: MetricCallout[] = [parsed];
+      const callout = calloutNode(node);
+      if (callout?.data?.hName === "div") {
+        const metrics = [callout];
         while (index + 1 < children.length) {
           const sibling = children[index + 1];
-          if (!sibling || sibling.type !== "blockquote") break;
-          const siblingCallout = parseBlockquote(sibling);
-          if (siblingCallout?.kind !== "metric") break;
+          if (sibling?.type !== "blockquote") break;
+          const siblingCallout = calloutNode(sibling);
+          if (siblingCallout?.data?.hName !== "div") break;
           metrics.push(siblingCallout);
           index += 1;
         }
         next.push(
-          htmlNode(
-            metrics.length > 1
-              ? renderMetricRow(metrics)
-              : renderMetricCallout(metrics[0].value, metrics[0].label)
-          )
+          metrics.length === 1
+            ? callout
+            : element(
+                "blockquote",
+                "div",
+                metricRowClass,
+                metrics.map(metric => ({
+                  ...metric,
+                  data: {
+                    hName: "div",
+                    hProperties: {
+                      className: calloutClassNames(metricRowCardClass),
+                    },
+                  },
+                }))
+              )
         );
         continue;
       }
-      if (parsed?.kind === "quote") {
-        next.push(
-          htmlNode(renderQuoteCallout(parsed.quote, parsed.attribution))
-        );
+      if (callout) {
+        next.push(callout);
         continue;
       }
     }
