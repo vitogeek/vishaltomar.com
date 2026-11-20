@@ -5,7 +5,7 @@ export default defineAstroPaperConfig({
     url: "https://vishaltomar.com",
     title: "Vishal Tomar",
     description:
-      "Vishal Tomar is a Toronto-based technical product leader building SaaS in regulated environments—focusing heavily on compliance, security, risk mitigation, and auditability.",
+      "AI-native product engineer and leader. Vishal Tomar builds products that remove high-friction problems from people's lives, across engineering, design and product.",
     author: "Vishal Tomar",
     profile: "https://vishaltomar.com",
     lang: "en-CA",
