@@ -6,7 +6,7 @@ export const copy = {
   },
   home: {
     support:
-      "Nine years across engineering, product and management roles means I weigh technical trade-offs as carefully as customer value and business impact.",
+      "AI-native product engineer and leader. I build products that remove high-friction problems from people's lives, across engineering, design and product.",
   },
   footer: {
     copyright: "Copyright",
