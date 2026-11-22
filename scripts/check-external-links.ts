@@ -47,7 +47,12 @@ for (const file of globSync("**/*.html", { cwd: dist }).sort()) {
         );
       }
       found.set(href, (found.get(href) ?? new Set()).add(page));
-    } else if (blank && staysInTab(href)) {
+    } else if (
+      blank &&
+      staysInTab(href) &&
+      // Related case studies open in a new tab and set rel="noopener".
+      (!rel.includes("noopener") || /^mailto:/i.test(href))
+    ) {
       const kind = /^mailto:/i.test(href) ? "a mailto" : "an internal";
       failures.push(`${page}: ${href} is ${kind} link with target="_blank".`);
     }

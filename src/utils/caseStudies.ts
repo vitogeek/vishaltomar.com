@@ -38,3 +38,49 @@ export function getSortedCaseStudies(
 export function caseStudyPath(id: string): string {
   return pagePath(`case-studies/${id}`);
 }
+
+type RankableCaseStudy = {
+  id: string;
+  data: {
+    draft: boolean;
+    tags: readonly string[];
+    pubDatetime: Date;
+  };
+  body?: string;
+};
+
+function sharedTagCount(
+  tags: readonly string[],
+  currentTags: ReadonlySet<string>
+): number {
+  const shared = new Set<string>();
+  for (const tag of tags) {
+    if (currentTags.has(tag)) shared.add(tag);
+  }
+  return shared.size;
+}
+
+export function getRelatedCaseStudies<T extends RankableCaseStudy>(
+  studies: readonly T[],
+  currentId: string,
+  limit = 3
+): T[] {
+  const currentTags = new Set(
+    studies.find(study => study.id === currentId)?.data.tags ?? []
+  );
+
+  return studies
+    .filter(study => study.id !== currentId && !isCaseStudyDraft(study))
+    .map(study => ({
+      study,
+      sharedTags: sharedTagCount(study.data.tags, currentTags),
+    }))
+    .sort((a, b) => {
+      if (a.sharedTags !== b.sharedTags) return b.sharedTags - a.sharedTags;
+      return (
+        b.study.data.pubDatetime.getTime() - a.study.data.pubDatetime.getTime()
+      );
+    })
+    .slice(0, limit)
+    .map(item => item.study);
+}

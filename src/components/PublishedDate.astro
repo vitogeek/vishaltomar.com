@@ -1,0 +1,20 @@
+---
+import config from "@/config";
+import { publishedDate } from "@/utils/publishedDate";
+
+interface Props {
+  date: Date;
+  class?: string;
+}
+
+const { date, class: className } = Astro.props;
+const { iso, label } = publishedDate(
+  date,
+  config.site.lang,
+  config.site.timezone
+);
+---
+
+<time datetime={iso} class:list={["block text-sm wrap-break-word", className]}>
+  Published on {label}
+</time>
