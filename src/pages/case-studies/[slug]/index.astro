@@ -8,7 +8,12 @@ import Breadcrumb from "@/components/Breadcrumb.astro";
 import Figure from "@/components/mdx/Figure.astro";
 import Video from "@/components/mdx/Video.astro";
 import Callout from "@/components/mdx/Callout.astro";
-import { getSortedCaseStudies } from "@/utils/caseStudies";
+import PublishedDate from "@/components/PublishedDate.astro";
+import {
+  caseStudyPath,
+  getRelatedCaseStudies,
+  getSortedCaseStudies,
+} from "@/utils/caseStudies";
 import { pagePath } from "@/utils/withBase";
 import config from "@/config";
 
@@ -26,9 +31,20 @@ interface Props {
 }
 
 const { study } = Astro.props;
-const { title, summary, role, timeline, stack, tags, cover, coverAlt } =
-  study.data;
+const {
+  title,
+  summary,
+  role,
+  timeline,
+  stack,
+  tags,
+  cover,
+  coverAlt,
+  pubDatetime,
+} = study.data;
 const { Content } = await render(study);
+const studies = await getCollection("caseStudies");
+const related = getRelatedCaseStudies(studies, study.id);
 
 const ogImage = config.features.dynamicOgImage
   ? pagePath(`case-studies/${study.id}/index.png`)
@@ -55,6 +71,7 @@ const ogImage = config.features.dynamicOgImage
         >
           {title}
         </h1>
+        <PublishedDate date={pubDatetime} class="mt-3" />
         <p class="mt-4 text-lg leading-relaxed wrap-break-word">{summary}</p>
         <dl class="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
@@ -114,6 +131,33 @@ const ogImage = config.features.dynamicOgImage
         <Content components={{ Figure, Video, Callout }} />
       </div>
     </article>
+    {
+      related.length > 0 && (
+        <section class="mt-16" aria-labelledby="for-you-heading">
+          <h2
+            id="for-you-heading"
+            class="text-2xl font-semibold wrap-break-word sm:text-3xl"
+          >
+            For you
+          </h2>
+          <ul class="mt-4 flex flex-col gap-4">
+            {related.map(item => (
+              <li class="min-w-0">
+                <a
+                  href={caseStudyPath(item.id)}
+                  target="_blank"
+                  rel="noopener"
+                  class="text-accent text-lg font-medium wrap-break-word decoration-dashed underline-offset-4 hover:underline focus-visible:no-underline focus-visible:underline-offset-0"
+                >
+                  {item.data.title}
+                  <span class="sr-only"> (opens in new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
   </main>
 
   <Footer />
