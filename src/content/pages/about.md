@@ -5,7 +5,7 @@ description: "AI-native product engineer and leader. Vishal Tomar builds product
 
 ## Bio
 
-I'm a Senior Full-Stack Engineer and Product Design Lead at CGVantage, a Canadian cybersecurity firm that runs PCI DSS and SOC assessments for Fortune 500 companies. Right now I'm building a software factory there, where AI agents plan, build and ship safe, reliable software with minimal human input.
+I'm a Senior Full-Stack Engineer at CGVantage, a Canadian cybersecurity firm that runs PCI DSS and SOC assessments for Fortune 500 companies. Right now I'm building a software factory there, where AI agents plan, build and ship safe, reliable software with minimal human input.
 
 From 2022 to 2025, I was CGVantage's Product Design Lead. I designed and launched the compliance platform assessors use to run and manage audits. It cut assessment completion times by more than half and increased customer satisfaction by 23%. I led discovery, the roadmap and sprint planning for a squad of four developers.
 

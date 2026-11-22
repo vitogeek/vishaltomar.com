@@ -53,7 +53,7 @@ A study with `draft: true` is omitted when `VERCEL_ENV` is `production` (`src/ut
 
 Any entry whose body contains `[PLACEHOLDER:` is treated as a draft, whatever the front matter says. The listing, detail routes, sitemap, RSS feed, and OG images all use that one check.
 
-On `/case-studies/`, `case-study` entries stay in the case studies list. `impact-report` entries are listed under Impact reports, newest first. That section is omitted when there are no reports.
+On `/case-studies/`, every published study is listed together, newest `pubDatetime` first. `type` does not split the list.
 
 ### `Figure`, `Video`, and `Callout`
 

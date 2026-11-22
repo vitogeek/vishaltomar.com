@@ -17,7 +17,6 @@ export const copy = {
     caseStudiesDesc:
       "Problems, decisions and trade-offs from building SaaS in regulated environments, plus a few experiments.",
     caseStudiesEmpty: "No published case studies yet.",
-    impactReportsTitle: "Impact reports",
   },
   a11y: {
     skipToContent: "Skip to content",

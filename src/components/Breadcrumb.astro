@@ -1,5 +1,6 @@
 ---
 import { pagePath, stripBase } from "@/utils/withBase";
+import { humanizeSlug } from "@/utils/humanizeSlug";
 import { copy } from "@/copy";
 
 const pathWithoutBase = stripBase(Astro.url.pathname).replace(/\/+$/, "");
@@ -16,6 +17,9 @@ const decodeSegment = (value: string) => {
 const navLabels: Record<string, string> = {
   "case-studies": copy.nav.caseStudies,
 };
+
+const segmentLabel = (segment: string) =>
+  navLabels[segment] ?? humanizeSlug(decodeSegment(segment));
 ---
 
 <nav class="app-layout mt-8 mb-1" aria-label="breadcrumb">
@@ -32,17 +36,14 @@ const navLabels: Record<string, string> = {
       breadcrumbList.map((breadcrumb, index) =>
         index + 1 === breadcrumbList.length ? (
           <li>
-            <span
-              class:list={["capitalize opacity-75", { lowercase: index > 0 }]}
-              aria-current="page"
-            >
-              {navLabels[breadcrumb] ?? decodeSegment(breadcrumb)}
+            <span class="capitalize opacity-75" aria-current="page">
+              {segmentLabel(breadcrumb)}
             </span>
           </li>
         ) : (
           <li class="flex items-center gap-x-1">
             <a href={pagePath(breadcrumb)} class="capitalize opacity-70">
-              {navLabels[breadcrumb] ?? decodeSegment(breadcrumb)}
+              {segmentLabel(breadcrumb)}
             </a>
             <span aria-hidden="true" class="opacity-70">
               &raquo;
