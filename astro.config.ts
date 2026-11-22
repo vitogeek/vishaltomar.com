@@ -36,6 +36,10 @@ export default defineConfig({
       status: 301,
       destination: "/",
     },
+    "/case-studies/founder-bots-nine-days-in/": {
+      status: 301,
+      destination: "/case-studies/founder-bots-update-1/",
+    },
   },
   integrations: [mdx(), sitemap()],
   markdown: {
