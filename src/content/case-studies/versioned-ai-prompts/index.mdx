@@ -15,6 +15,23 @@ import conflict from "./version-conflict.png";
 import editPoster from "./edit-prompt-save-new-version-poster.webp";
 import rollbackPoster from "./rollback-to-older-version-poster.webp";
 
+## Result
+
+> [!METRIC] Instant | time for a prompt update to reach assessors, down from at least 3 days (estimate)
+
+> [!METRIC] ~17.5 h | developer time saved across 21 prompt iterations in month one (estimate)
+
+> [!METRIC] ~$1,050 | developer time saved in month one at $60/h (estimate)
+
+> [!METRIC] 2 | production prompt updates shipped by admins, no deploy
+
+- In the first month, admins shipped two production prompt updates themselves, with no developer, code change or deploy. Before that, 19 versions were saved in QA, our staging environment, as the prompts were tuned before going live. The numbers are small, but they show the self-serve path works end to end.
+- Senior assessors now tune the AI themselves. A prompt change went from an engineering request and a deploy to a save on an admin page, and from at least three days to reach assessors to immediate. By my estimate, the old path took a day for PR approval and merge, a deploy the day after, and another day before assessors saw it.
+- Every version records who saved it, when and why, and any version can be restored without losing history.
+- Prompt maintenance is off the dev team's plate. I estimate each change used to cost about 50 minutes of developer time: 10 to update the prompt, 10 to review it and 30 to merge and deploy. Under the old process, every QA iteration would have needed that cycle too, so the 21 iterations in the first month come to about 17.5 developer hours moved from prompt maintenance to growth work. At an assumed average developer rate of $60 an hour, that's about $1,050 of developer time in the first month (an estimate). The two production updates alone account for 100 minutes, about $100, and they spared assessors at least six days of waiting.
+
+The bigger upside is removing the wait. A prompt improvement now reaches every assessment the same day instead of after a release, so assessors get better AI output right away, which should shorten assessment turnaround and let the same team take on more assessments. The developer hours go to growth features that can drive revenue, and admin-owned AI tuning becomes a selling point for a self-serve offering.
+
 ## The problem
 
 I work on a B2B compliance web portal with an AI analysis feature. Our team is two senior developers, a product manager and a director, building for 11 assessors.
@@ -86,11 +103,6 @@ Instead of a migration that seeds the first version on deploy, a hardcoded defau
 ### Bring the design back to existing patterns
 
 I kept the API contract between the two codebases in step. Over two review rounds, I replaced the AI's custom pieces with patterns the codebase already used. It passed the full backend suite of about 675 tests, including new tests for conflicts and rollbacks.
-
-## Result
-
-- Senior assessors now tune the AI themselves. A prompt change went from an engineering request and a deploy to a save on an admin page.
-- Every version records who saved it, when and why, and any version can be restored without losing history.
 
 ## How I used AI to build it
 
