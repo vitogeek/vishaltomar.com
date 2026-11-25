@@ -135,7 +135,7 @@ In that source:
 - Do not use an H1. The title comes from front matter.
 - Use Canadian spelling, and do not invent facts.
 - Maximum 1,800 words. There is no minimum.
-- A case study uses these H2s, in this order: The problem, Constraints, Decisions and trade-offs, Result, How I used AI to build it, What's next. The section on AI comes after Result.
+- A case study uses these H2s, in this order: The problem, Constraints, Decisions and trade-offs, Result, How I used AI to build it, What's next. Result may come first, before The problem, when the title and summary already describe what was built. The other sections keep their relative order. The section on AI comes after Result.
 - An impact report (`type: impact-report`) may use any H2s.
 - An image followed by a `*Caption: ...*` line becomes a figure or a video. Several figures in a row are supported, as are Markdown tables.
 - GIFs become muted, looping MP4s with a poster.
