@@ -4,9 +4,11 @@ import PublishedDate from "@/components/PublishedDate.astro";
 import { caseStudyPath } from "@/utils/caseStudies";
 import { toTransitionName } from "@/utils/toTransitionName";
 
-type Props = CollectionEntry<"caseStudies">;
+type Props = CollectionEntry<"caseStudies"> & {
+  heading?: "h2" | "h3";
+};
 
-const { id, data } = Astro.props;
+const { id, data, heading: Heading = "h2" } = Astro.props;
 const { title, summary, role, timeline, tags, pubDatetime } = data;
 ---
 
@@ -20,9 +22,9 @@ const { title, summary, role, timeline, tags, pubDatetime } = data;
         "focus-visible:no-underline focus-visible:underline-offset-0",
       ]}
     >
-      <h2 transition:name={toTransitionName(id)} class="wrap-break-word">
+      <Heading transition:name={toTransitionName(id)} class="wrap-break-word">
         {title}
-      </h2>
+      </Heading>
     </a>
     <PublishedDate date={pubDatetime} class="mt-2" />
     <p class="mt-2 wrap-break-word">{summary}</p>

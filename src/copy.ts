@@ -7,6 +7,7 @@ export const copy = {
   home: {
     support:
       "AI-native product engineer and leader. I build products that remove high-friction problems from people's lives, across engineering, design and product.",
+    featured: "Featured case study",
   },
   footer: {
     copyright: "Copyright",

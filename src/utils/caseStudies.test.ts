@@ -1,17 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { getRelatedCaseStudies } from "./caseStudies";
+import { getFeaturedCaseStudies, getRelatedCaseStudies } from "./caseStudies";
 
 function study(
   id: string,
   tags: string[],
   iso: string,
   draft = false,
-  body?: string
+  body?: string,
+  featured = false
 ) {
   return {
     id,
     data: {
       draft,
+      featured,
       tags,
       pubDatetime: new Date(iso),
     },
@@ -22,6 +24,60 @@ function study(
 function ids(studies: { id: string }[]): string[] {
   return studies.map(item => item.id);
 }
+
+describe("getFeaturedCaseStudies", () => {
+  it("returns nothing when no study is featured", () => {
+    const studies = [
+      study("newer", ["a"], "2026-03-01T00:00:00.000Z"),
+      study("older", ["b"], "2026-01-01T00:00:00.000Z"),
+    ];
+    expect(getFeaturedCaseStudies(studies)).toEqual([]);
+  });
+
+  it("excludes drafts", () => {
+    const studies = [
+      study("draft", ["a"], "2026-06-01T00:00:00.000Z", true, undefined, true),
+      study(
+        "placeholder",
+        ["a"],
+        "2026-07-01T00:00:00.000Z",
+        false,
+        "Result\n\n[PLACEHOLDER: outcome]\n",
+        true
+      ),
+      study(
+        "published",
+        ["a"],
+        "2026-02-01T00:00:00.000Z",
+        false,
+        undefined,
+        true
+      ),
+    ];
+    expect(ids(getFeaturedCaseStudies(studies))).toEqual(["published"]);
+  });
+
+  it("orders featured studies newest first", () => {
+    const studies = [
+      study("older", ["a"], "2026-01-01T00:00:00.000Z", false, undefined, true),
+      study("newer", ["b"], "2026-05-01T00:00:00.000Z", false, undefined, true),
+      study(
+        "middle",
+        ["c"],
+        "2026-03-01T00:00:00.000Z",
+        false,
+        undefined,
+        true
+      ),
+      study("plain", ["d"], "2026-08-01T00:00:00.000Z"),
+    ];
+    expect(ids(getFeaturedCaseStudies(studies))).toEqual([
+      "newer",
+      "middle",
+      "older",
+    ]);
+  });
+});
 
 describe("getRelatedCaseStudies", () => {
   it("excludes the current study", () => {

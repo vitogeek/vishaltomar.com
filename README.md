@@ -43,6 +43,7 @@ Add `src/content/case-studies/<slug>/index.mdx`. The `caseStudies` collection in
 | `coverAlt`    | string                              | yes                        |
 | `type`        | `"case-study"` or `"impact-report"` | no, default `"case-study"` |
 | `draft`       | boolean                             | no, default `false`        |
+| `featured`    | boolean                             | no, default `false`        |
 | `pubDatetime` | date                                | yes                        |
 
 `cover` is a path relative to the MDX file, such as `./cover.png`. `pubDatetime` is a YAML date.
@@ -53,7 +54,11 @@ A study with `draft: true` is omitted when `VERCEL_ENV` is `production` (`src/ut
 
 Any entry whose body contains `[PLACEHOLDER:` is treated as a draft, whatever the front matter says. The listing, detail routes, sitemap, RSS feed, and OG images all use that one check.
 
-On `/case-studies/`, every published study is listed together, newest `pubDatetime` first. `type` does not split the list.
+### Featured on the home page
+
+`featured: true` includes the study in the home page section below the About essay. That section lists published studies with `featured: true`, newest `pubDatetime` first. Drafts are left out in every build. When no published study is featured, the home page does not render the section.
+
+On `/case-studies/`, every published study is listed together, newest `pubDatetime` first. `type` does not split the list, and `featured` does not change it.
 
 ### `Figure`, `Video`, and `Callout`
 
