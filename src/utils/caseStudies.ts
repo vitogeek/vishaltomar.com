@@ -11,11 +11,28 @@ function includeDraftCaseStudies(): boolean {
   return VERCEL_ENV !== "production";
 }
 
-function byNewest(
-  studies: CollectionEntry<"caseStudies">[]
-): CollectionEntry<"caseStudies">[] {
+function byNewest<T extends { data: { pubDatetime: Date } }>(
+  studies: readonly T[]
+): T[] {
   return [...studies].sort(
     (a, b) => b.data.pubDatetime.getTime() - a.data.pubDatetime.getTime()
+  );
+}
+
+type FeaturedCaseStudy = {
+  data: {
+    draft: boolean;
+    featured: boolean;
+    pubDatetime: Date;
+  };
+  body?: string;
+};
+
+export function getFeaturedCaseStudies<T extends FeaturedCaseStudy>(
+  studies: readonly T[]
+): T[] {
+  return byNewest(
+    studies.filter(study => study.data.featured && !isCaseStudyDraft(study))
   );
 }
 

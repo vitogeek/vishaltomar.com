@@ -12,6 +12,7 @@ export function caseStudySchema<TCover extends z.ZodType>(image: () => TCover) {
     coverAlt: z.string(),
     type: z.enum(["case-study", "impact-report"]).default("case-study"),
     draft: z.boolean().default(false),
+    featured: z.boolean().default(false),
     pubDatetime: z.date(),
   });
 }
